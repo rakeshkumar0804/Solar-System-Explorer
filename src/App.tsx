@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { Scene } from './components/3d/Scene';
 import { Navbar } from './components/ui/Navbar';
 import { ControlPanel } from './components/ui/ControlPanel';
-import { PlanetQuickNav } from './components/ui/PlanetQuickNav';
 import { InfoPanel } from './components/ui/InfoPanel';
 import { ControlsOverlay } from './components/ui/ControlsOverlay';
 import { CompareModal } from './components/ui/CompareModal';
@@ -150,7 +149,7 @@ function App() {
   }, [handleResetCamera, handleSelectObject, handleToggleSound, settings.activeThemeId]);
 
   return (
-    <main className="w-screen h-screen relative overflow-hidden bg-slate-950 text-slate-100 select-none">
+    <main className="w-screen h-screen relative overflow-hidden bg-[#05010d] text-slate-100 select-none">
       {/* 1. Primary 3D WebGL Canvas Scene */}
       <Scene
         sunData={SUN_DATA}
@@ -165,7 +164,7 @@ function App() {
         onSelect={handleSelectObject}
       />
 
-      {/* 2. Top Navbar */}
+      {/* 2. Top Header & Sound Controls */}
       <Navbar
         planets={ALL_CELESTIAL_BODIES}
         deepSpaceObjects={DEEP_SPACE_OBJECTS}
@@ -175,7 +174,7 @@ function App() {
         onSelectObject={handleSelectObject}
       />
 
-      {/* 3. Floating Control Dock with Cosmic Phenomena Menu */}
+      {/* 3. Floating Control Dock (Bottom Left) */}
       <ControlPanel
         settings={settings}
         theme={activeTheme}
@@ -183,15 +182,7 @@ function App() {
         onResetCamera={handleResetCamera}
       />
 
-      {/* 4. Bottom Quick Nav Ribbon */}
-      <PlanetQuickNav
-        planets={ALL_CELESTIAL_BODIES}
-        selectedId={settings.selectedBodyId}
-        theme={activeTheme}
-        onSelect={handleSelectObject}
-      />
-
-      {/* 5. Telemetry & Info Drawer */}
+      {/* 4. Telemetry & Info Drawer */}
       <InfoPanel
         selectedItem={selectedItem}
         theme={activeTheme}
@@ -202,7 +193,7 @@ function App() {
         onNextPlanet={handleNextPlanet}
       />
 
-      {/* 6. Comparison Modal */}
+      {/* 5. Comparison Modal */}
       {settings.comparisonBodyId && (
         <CompareModal
           targetPlanetId={settings.comparisonBodyId}
@@ -213,7 +204,7 @@ function App() {
         />
       )}
 
-      {/* 7. Viewport Shortcuts HUD */}
+      {/* 6. Viewport Shortcuts HUD Legend (Bottom Right) */}
       <ControlsOverlay theme={activeTheme} />
     </main>
   );
