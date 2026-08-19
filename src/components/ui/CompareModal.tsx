@@ -15,7 +15,7 @@ export function CompareModal({ targetPlanetId, theme: _theme, onClose }: Compare
   const ratio = (target.size / earth.size).toFixed(2);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
       <div className="bg-slate-950/95 border border-white/15 rounded-3xl max-w-2xl w-full p-6 shadow-2xl text-slate-200 relative animate-in fade-in zoom-in-95 duration-200">
         <button
           onClick={onClose}

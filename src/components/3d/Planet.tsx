@@ -233,6 +233,7 @@ export function Planet({
           position={[0, data.size + (data.rings ? 2.5 : 1.4), 0]}
           center
           distanceFactor={60}
+          zIndexRange={[0, 10]}
         >
           <div
             onClick={(e) => {

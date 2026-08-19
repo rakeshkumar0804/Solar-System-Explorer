@@ -96,7 +96,7 @@ export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, on
 
       {/* 3D Clean Text Label */}
       {showLabels && (
-        <Html position={[0, data.size + 1.8, 0]} center distanceFactor={70}>
+        <Html position={[0, data.size + 1.8, 0]} center distanceFactor={70} zIndexRange={[0, 10]}>
           <div
             onClick={(e) => {
               e.stopPropagation();
