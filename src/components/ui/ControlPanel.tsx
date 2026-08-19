@@ -70,17 +70,15 @@ export function ControlPanel({
               title="Click to reset to 1.0x"
               className="text-xs font-mono text-purple-200 hover:text-white font-bold cursor-pointer transition-colors"
             >
-              {settings.timeSpeed > 0
-                ? `${settings.timeSpeed.toFixed(1)}x`
-                : `${settings.timeSpeed.toFixed(1)}x`}
+              {settings.timeSpeed.toFixed(1)}x
             </button>
           </div>
 
           <input
             type="range"
-            min="-10"
+            min="-0.5"
             max="10"
-            step="0.1"
+            step="0.05"
             value={settings.timeSpeed}
             onDoubleClick={resetSpeed}
             onChange={(e) => {
