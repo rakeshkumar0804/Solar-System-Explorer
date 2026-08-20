@@ -22,7 +22,7 @@ interface SpaceObjectsMenuProps {
   onClose?: () => void;
 }
 
-interface PhenomenonItem {
+export interface PhenomenonItem {
   key: keyof CosmicToggles;
   label: string;
   category: string;
@@ -31,7 +31,7 @@ interface PhenomenonItem {
   iconBg: string;
 }
 
-const PHENOMENA: PhenomenonItem[] = [
+export const PHENOMENA: PhenomenonItem[] = [
   {
     key: 'habitableZone',
     label: 'Habitable Zone',
@@ -121,8 +121,10 @@ export function SpaceObjectsMenu({
   onToggleAll,
   onClose,
 }: SpaceObjectsMenuProps) {
-  const activeCount = Object.values(toggles).filter(Boolean).length;
-  const allActive = activeCount >= PHENOMENA.length;
+  // Dynamically compute active count strictly from registered phenomena list
+  const totalCount = PHENOMENA.length;
+  const activeCount = PHENOMENA.filter((item) => !!toggles[item.key]).length;
+  const allActive = activeCount === totalCount;
 
   return (
     <div
@@ -146,8 +148,8 @@ export function SpaceObjectsMenu({
             <div className="text-[11px] font-mono uppercase font-bold tracking-wider text-white">
               COSMIC PHENOMENA
             </div>
-            <div className="text-[9px] font-mono text-slate-400">
-              {activeCount} of {PHENOMENA.length} Active
+            <div className="text-[9px] font-mono text-purple-300">
+              {activeCount} of {totalCount} Active
             </div>
           </div>
         </div>
