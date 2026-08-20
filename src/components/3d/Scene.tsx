@@ -43,11 +43,15 @@ export function Scene({
   };
 
   return (
-    <div className="w-full h-full absolute inset-0 z-0 cursor-grab active:cursor-grabbing pointer-events-auto touch-none">
+    <div className="space-canvas-container w-full h-full absolute inset-0 z-0 pointer-events-auto touch-none">
       <Canvas
         camera={{ position: [30, 70, 100], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
-        onPointerMissed={() => { document.body.style.cursor = "var(--cursor-rocket)"; onSelect(null); }}
+        onPointerMissed={() => {
+          document.body.classList.remove('cursor-pointer-active');
+          document.body.style.cursor = 'var(--cursor-rocket)';
+          onSelect(null);
+        }}
       >
         <color attach="background" args={[theme.bgSpace]} />
         <ambientLight color={theme.ambientColor} intensity={theme.ambientIntensity} />
