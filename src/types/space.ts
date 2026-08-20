@@ -131,7 +131,6 @@ export interface CosmicToggles {
   asteroidBelt: boolean;
   atmospheres: boolean;
   habitableZone: boolean;
-  spacecraft: boolean;
 }
 
 export interface ExplorerSettings {

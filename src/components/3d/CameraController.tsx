@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import type { CelestialBody, DeepSpaceObject, SpacecraftData } from '../../types/space';
+import type { CelestialBody, DeepSpaceObject } from '../../types/space';
 
 interface CameraControllerProps {
   selectedId: string | null;
@@ -11,7 +11,6 @@ interface CameraControllerProps {
   deepSpaceObjects: DeepSpaceObject[];
   planets: CelestialBody[];
   sunData: CelestialBody;
-  spacecraft?: SpacecraftData[];
 }
 
 export function CameraController({
@@ -20,7 +19,6 @@ export function CameraController({
   deepSpaceObjects,
   planets,
   sunData,
-  spacecraft = [],
 }: CameraControllerProps) {
   const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -54,7 +52,6 @@ export function CameraController({
     };
   }, []);
 
-  // Trigger smooth one-time transition when selection changes
   useEffect(() => {
     if (selectedId !== prevSelectedId.current) {
       prevSelectedId.current = selectedId;
@@ -66,7 +63,6 @@ export function CameraController({
     const controls = controlsRef.current;
     if (!controls) return;
 
-    // Determine destination target coordinates and zoom distance
     let targetPos: THREE.Vector3 = defaultTarget.current;
     let targetZoomDistance = 75;
 
@@ -86,22 +82,14 @@ export function CameraController({
         if (dObj) {
           targetPos = new THREE.Vector3(...dObj.position);
           targetZoomDistance = Math.max(dObj.scale * 3.8, 14.0);
-        } else {
-          const craft = spacecraft.find((c) => c.id === selectedId);
-          if (craft) {
-            targetPos = new THREE.Vector3(...craft.position);
-            targetZoomDistance = 4.5;
-          }
         }
       }
     }
 
-    // 1. Programmatic Transition Animation
     if (isAnimating.current) {
       const lerpSpeed = THREE.MathUtils.clamp(delta * 3.5, 0.03, 0.15);
 
       if (!selectedId) {
-        // Resetting to Overview
         camera.position.lerp(defaultCameraPos.current, lerpSpeed);
         controls.target.lerp(defaultTarget.current, lerpSpeed);
 
@@ -114,10 +102,8 @@ export function CameraController({
           isAnimating.current = false;
         }
       } else {
-        // Focusing on selected Celestial Body / Deep Space Object / Spacecraft
         controls.target.lerp(targetPos, lerpSpeed);
 
-        // Desired camera position sitting at an optimal angle offset relative to target
         const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
         if (offset.lengthSq() < 0.001) {
           offset.set(targetZoomDistance * 0.5, targetZoomDistance * 0.4, targetZoomDistance * 0.75);
@@ -136,7 +122,6 @@ export function CameraController({
         }
       }
     } else if (selectedId && !isUserInteracting.current) {
-      // 2. Lock-on Tracking for moving planets or focused target: maintain OrbitControls center
       const targetDelta = new THREE.Vector3().subVectors(targetPos, controls.target);
       if (targetDelta.lengthSq() > 0.0001) {
         controls.target.copy(targetPos);

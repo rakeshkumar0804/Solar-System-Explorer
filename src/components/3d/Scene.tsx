@@ -2,21 +2,19 @@ import { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import type { CelestialBody, DeepSpaceObject, ThemeConfig, CosmicToggles, SpacecraftData } from '../../types/space';
+import type { CelestialBody, DeepSpaceObject, ThemeConfig, CosmicToggles } from '../../types/space';
 import { Sun } from './Sun';
 import { Planet } from './Planet';
 import { OrbitTrail } from './OrbitTrail';
 import { AsteroidBelt } from './AsteroidBelt';
 import { SpaceObjects } from './SpaceObjects';
 import { HabitableZone } from './HabitableZone';
-import { Spacecraft } from './Spacecraft';
 import { CameraController } from './CameraController';
 
 interface SceneProps {
   sunData: CelestialBody;
   planets: CelestialBody[];
   deepSpaceObjects: DeepSpaceObject[];
-  spacecraft?: SpacecraftData[];
   theme: ThemeConfig;
   timeSpeed: number;
   showOrbits: boolean;
@@ -30,7 +28,6 @@ export function Scene({
   sunData,
   planets,
   deepSpaceObjects,
-  spacecraft = [],
   theme,
   timeSpeed,
   showOrbits,
@@ -81,7 +78,7 @@ export function Scene({
           onSelect={(id) => onSelect(id)}
         />
 
-        {/* Goldilocks Habitable Zone Volumetric Overlay */}
+        {/* Goldilocks Habitable Zone Volumetric Ring */}
         {cosmicToggles?.habitableZone && (
           <HabitableZone
             innerRadius={21.5}
@@ -123,17 +120,6 @@ export function Scene({
           />
         )}
 
-        {/* Historic Spacecraft & Interplanetary Trajectories */}
-        {cosmicToggles?.spacecraft && (
-          <Spacecraft
-            crafts={spacecraft}
-            timeSpeed={timeSpeed}
-            showLabels={showLabels}
-            selectedId={selectedId}
-            onSelect={(id) => onSelect(id)}
-          />
-        )}
-
         {/* Deep Space Objects & Cosmic Phenomena */}
         <SpaceObjects
           objects={deepSpaceObjects}
@@ -145,14 +131,13 @@ export function Scene({
           onSelect={(id) => onSelect(id)}
         />
 
-        {/* Smooth, User-Interruptible Orbit Controls with Spacecraft support */}
+        {/* Smooth, User-Interruptible Orbit Controls */}
         <CameraController
           selectedId={selectedId}
           planetPositionsRef={planetPositions}
           deepSpaceObjects={deepSpaceObjects}
           planets={planets}
           sunData={sunData}
-          spacecraft={spacecraft}
         />
       </Canvas>
     </div>

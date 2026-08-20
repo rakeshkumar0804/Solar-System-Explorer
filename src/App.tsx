@@ -7,7 +7,6 @@ import { ControlsOverlay } from './components/ui/ControlsOverlay';
 import { CompareModal } from './components/ui/CompareModal';
 import { SUN_DATA, PLANETS_DATA, ALL_CELESTIAL_BODIES } from './data/planetsData';
 import { DEEP_SPACE_OBJECTS } from './data/spaceObjectsData';
-import { SPACECRAFT_DATA } from './data/spacecraftData';
 import { THEMES, THEME_KEYS } from './data/themes';
 import type { ExplorerSettings } from './types/space';
 import { spaceAudio } from './utils/audio';
@@ -34,7 +33,6 @@ function App() {
       asteroidBelt: true,
       atmospheres: true,
       habitableZone: true,
-      spacecraft: true,
     },
     soundEnabled: false,
     activeThemeId: 'cosmic-purple',
@@ -51,7 +49,6 @@ function App() {
   const selectedItem = settings.selectedBodyId
     ? ALL_CELESTIAL_BODIES.find((b) => b.id === settings.selectedBodyId) ||
       DEEP_SPACE_OBJECTS.find((d) => d.id === settings.selectedBodyId) ||
-      SPACECRAFT_DATA.find((c) => c.id === settings.selectedBodyId) ||
       null
     : null;
 
@@ -178,7 +175,6 @@ function App() {
         sunData={SUN_DATA}
         planets={PLANETS_DATA}
         deepSpaceObjects={DEEP_SPACE_OBJECTS}
-        spacecraft={SPACECRAFT_DATA}
         theme={activeTheme}
         timeSpeed={settings.timeSpeed}
         showOrbits={settings.showOrbits}

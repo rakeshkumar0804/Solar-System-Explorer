@@ -8,7 +8,6 @@ import {
   CircleDot,
   Orbit,
   Compass,
-  Rocket,
   Sun,
   X,
   Check,
@@ -40,14 +39,6 @@ const PHENOMENA: PhenomenonItem[] = [
     icon: Sun,
     iconColor: '#10b981',
     iconBg: 'rgba(16, 185, 129, 0.15)',
-  },
-  {
-    key: 'spacecraft',
-    label: 'Historic Spacecraft',
-    category: 'Voyager 1, JWST, Parker Probe',
-    icon: Rocket,
-    iconColor: '#f59e0b',
-    iconBg: 'rgba(245, 158, 11, 0.15)',
   },
   {
     key: 'milkyWayCore',
@@ -195,7 +186,6 @@ export function SpaceObjectsMenu({
                   : 'bg-transparent hover:bg-white/[0.03] border border-transparent opacity-60 hover:opacity-90'
               }`}
             >
-              {/* Icon & Metadata */}
               <div className="flex items-center gap-2.5 min-w-0 pr-2">
                 <div
                   className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border border-white/10 transition-transform group-hover:scale-105"
@@ -216,7 +206,6 @@ export function SpaceObjectsMenu({
                 </div>
               </div>
 
-              {/* iOS-Style Pill Switch */}
               <div
                 className={`w-9 h-5 rounded-full transition-colors duration-200 relative flex items-center px-0.5 shrink-0 ${
                   isActive
