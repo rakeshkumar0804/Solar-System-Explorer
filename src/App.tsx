@@ -39,6 +39,10 @@ function App() {
     comparisonBodyId: null,
   });
 
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const [compareA, setCompareA] = useState('earth');
+  const [compareB, setCompareB] = useState('mars');
+
   const activeTheme = THEMES[settings.activeThemeId] || THEMES['cosmic-purple'];
 
   const selectedItem = settings.selectedBodyId
@@ -71,10 +75,17 @@ function App() {
     handleSelectObject(list[nextIndex].id);
   }, [settings.selectedBodyId, handleSelectObject]);
 
+  const handleOpenCompareWith = useCallback((planetId: string) => {
+    setCompareA('earth');
+    setCompareB(planetId);
+    setIsCompareOpen(true);
+    spaceAudio.playSelectSound();
+  }, []);
+
   // Keyboard Shortcuts Hook
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
         return;
       }
 
@@ -89,7 +100,15 @@ function App() {
 
         case 'Escape':
           e.preventDefault();
-          handleResetCamera();
+          if (isCompareOpen) {
+            setIsCompareOpen(false);
+          } else {
+            handleResetCamera();
+          }
+          break;
+
+        case 'KeyC':
+          setIsCompareOpen((prev) => !prev);
           break;
 
         case 'Digit0':
@@ -146,7 +165,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleResetCamera, handleSelectObject, handleToggleSound, settings.activeThemeId]);
+  }, [handleResetCamera, handleSelectObject, handleToggleSound, isCompareOpen, settings.activeThemeId]);
 
   return (
     <main className="w-screen h-screen relative overflow-hidden bg-[#05010d] text-slate-100 select-none">
@@ -164,7 +183,7 @@ function App() {
         onSelect={handleSelectObject}
       />
 
-      {/* 2. Top Header & Sound Controls */}
+      {/* 2. Top Header with Compare Button */}
       <Navbar
         planets={ALL_CELESTIAL_BODIES}
         deepSpaceObjects={DEEP_SPACE_OBJECTS}
@@ -172,6 +191,7 @@ function App() {
         soundEnabled={settings.soundEnabled}
         onToggleSound={handleToggleSound}
         onSelectObject={handleSelectObject}
+        onOpenCompare={() => setIsCompareOpen(true)}
       />
 
       {/* 3. Floating Control Dock (Bottom Left) */}
@@ -187,20 +207,17 @@ function App() {
         selectedItem={selectedItem}
         theme={activeTheme}
         onClose={() => handleSelectObject(null)}
-        onCompareWithEarth={(id) =>
-          setSettings((prev) => ({ ...prev, comparisonBodyId: id }))
-        }
+        onCompareWithEarth={handleOpenCompareWith}
         onNextPlanet={handleNextPlanet}
       />
 
-      {/* 5. Comparison Modal */}
-      {settings.comparisonBodyId && (
+      {/* 5. Dedicated Glassmorphic Dual Comparison Modal */}
+      {isCompareOpen && (
         <CompareModal
-          targetPlanetId={settings.comparisonBodyId}
+          initialTargetA={compareA}
+          initialTargetB={compareB}
           theme={activeTheme}
-          onClose={() =>
-            setSettings((prev) => ({ ...prev, comparisonBodyId: null }))
-          }
+          onClose={() => setIsCompareOpen(false)}
         />
       )}
 
