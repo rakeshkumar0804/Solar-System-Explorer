@@ -48,6 +48,7 @@ export function Scene({
         camera={{ position: [30, 70, 100], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
         onPointerMissed={() => {
+          document.body.classList.remove('cursor-hand-active');
           document.body.classList.remove('cursor-pointer-active');
           document.body.style.cursor = 'var(--cursor-rocket)';
           onSelect(null);
@@ -71,6 +72,28 @@ export function Scene({
           fade
           speed={0.4}
         />
+
+        {/* Invisible Orbital Disc Pointer Detector */}
+        <mesh
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, -0.1, 0]}
+          onPointerOver={(e) => {
+            e.stopPropagation();
+            document.body.classList.add('cursor-hand-active');
+          }}
+          onPointerOut={() => {
+            document.body.classList.remove('cursor-hand-active');
+          }}
+          onClick={(e) => {
+            // Clicking empty orbital plane deselects focused object
+            if (e.delta < 5) {
+              onSelect(null);
+            }
+          }}
+        >
+          <circleGeometry args={[95, 64]} />
+          <meshBasicMaterial visible={false} transparent opacity={0} depthWrite={false} />
+        </mesh>
 
         {/* Central Sun */}
         <Sun

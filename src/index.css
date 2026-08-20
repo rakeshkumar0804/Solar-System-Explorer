@@ -29,6 +29,9 @@
   cursor: var(--cursor-rocket) !important;
 }
 
+.cursor-hand-active,
+.cursor-hand-active canvas,
+body.cursor-hand-active,
 .cursor-pointer-active,
 .cursor-pointer-active canvas,
 body.cursor-pointer-active {
