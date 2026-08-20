@@ -22,15 +22,14 @@ export function CameraController({
   sunData,
   spacecraft = [],
 }: CameraControllerProps) {
-  const { camera, gl } = useThree();
+  const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
 
-  // Flags for interaction and animation
   const isUserInteracting = useRef(false);
   const isAnimating = useRef(false);
   const prevSelectedId = useRef<string | null>(null);
 
-  // Default solar system overview
+  // Solar system overview coordinates
   const defaultCameraPos = useRef(new THREE.Vector3(30, 70, 100));
   const defaultTarget = useRef(new THREE.Vector3(0, 0, 0));
 
@@ -40,7 +39,6 @@ export function CameraController({
 
     const handleStart = () => {
       isUserInteracting.current = true;
-      isAnimating.current = false;
     };
 
     const handleEnd = () => {
@@ -50,19 +48,13 @@ export function CameraController({
     controls.addEventListener('start', handleStart);
     controls.addEventListener('end', handleEnd);
 
-    const domElement = gl.domElement;
-    const handleWheel = () => {
-      isAnimating.current = false;
-    };
-    domElement.addEventListener('wheel', handleWheel, { passive: true });
-
     return () => {
       controls.removeEventListener('start', handleStart);
       controls.removeEventListener('end', handleEnd);
-      domElement.removeEventListener('wheel', handleWheel);
     };
-  }, [gl.domElement]);
+  }, []);
 
+  // Trigger smooth one-time transition when selection changes
   useEffect(() => {
     if (selectedId !== prevSelectedId.current) {
       prevSelectedId.current = selectedId;
@@ -74,75 +66,77 @@ export function CameraController({
     const controls = controlsRef.current;
     if (!controls) return;
 
-    if (isUserInteracting.current) {
-      controls.update();
-      return;
-    }
-
+    // Determine destination target coordinates and zoom distance
     let targetPos: THREE.Vector3 = defaultTarget.current;
-    let targetZoomOffset = 70;
+    let targetZoomDistance = 75;
 
     if (selectedId === 'sun') {
       targetPos = defaultTarget.current;
-      targetZoomOffset = sunData.size * 2.8;
+      targetZoomDistance = sunData.size * 2.8;
     } else if (selectedId) {
       const planet = planets.find((p) => p.id === selectedId);
       if (planet) {
         const livePos = planetPositionsRef.current?.get(planet.id);
         if (livePos) {
           targetPos = livePos;
-          targetZoomOffset = Math.max(planet.size * 3.4, 5.5);
+          targetZoomDistance = Math.max(planet.size * 3.4, 5.5);
         }
       } else {
         const dObj = deepSpaceObjects.find((o) => o.id === selectedId);
         if (dObj) {
           targetPos = new THREE.Vector3(...dObj.position);
-          targetZoomOffset = dObj.scale * 3.5;
+          targetZoomDistance = Math.max(dObj.scale * 3.8, 14.0);
         } else {
           const craft = spacecraft.find((c) => c.id === selectedId);
           if (craft) {
             targetPos = new THREE.Vector3(...craft.position);
-            targetZoomOffset = 4.5;
+            targetZoomDistance = 4.5;
           }
         }
       }
     }
 
+    // 1. Programmatic Transition Animation
     if (isAnimating.current) {
-      const lerpSpeed = THREE.MathUtils.clamp(delta * 3.0, 0.02, 0.12);
+      const lerpSpeed = THREE.MathUtils.clamp(delta * 3.5, 0.03, 0.15);
 
       if (!selectedId) {
+        // Resetting to Overview
         camera.position.lerp(defaultCameraPos.current, lerpSpeed);
         controls.target.lerp(defaultTarget.current, lerpSpeed);
 
         const distPos = camera.position.distanceTo(defaultCameraPos.current);
         const distTgt = controls.target.distanceTo(defaultTarget.current);
 
-        if (distPos < 0.1 && distTgt < 0.1) {
+        if (distPos < 0.15 && distTgt < 0.15) {
           camera.position.copy(defaultCameraPos.current);
           controls.target.copy(defaultTarget.current);
           isAnimating.current = false;
         }
       } else {
+        // Focusing on selected Celestial Body / Deep Space Object / Spacecraft
         controls.target.lerp(targetPos, lerpSpeed);
 
-        const currentOffset = new THREE.Vector3().subVectors(camera.position, controls.target);
-        if (currentOffset.lengthSq() < 0.001) {
-          currentOffset.set(0, targetZoomOffset * 0.6, targetZoomOffset);
+        // Desired camera position sitting at an optimal angle offset relative to target
+        const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+        if (offset.lengthSq() < 0.001) {
+          offset.set(targetZoomDistance * 0.5, targetZoomDistance * 0.4, targetZoomDistance * 0.75);
         }
-        currentOffset.normalize().multiplyScalar(targetZoomOffset);
-        const desiredCamPos = new THREE.Vector3().addVectors(targetPos, currentOffset);
+        offset.normalize().multiplyScalar(targetZoomDistance);
+        const desiredCamPos = new THREE.Vector3().addVectors(targetPos, offset);
 
         camera.position.lerp(desiredCamPos, lerpSpeed);
 
         const distTarget = controls.target.distanceTo(targetPos);
         const distPos = camera.position.distanceTo(desiredCamPos);
 
-        if (distTarget < 0.08 && distPos < 0.08) {
+        if (distTarget < 0.12 && distPos < 0.12) {
+          controls.target.copy(targetPos);
           isAnimating.current = false;
         }
       }
     } else if (selectedId && !isUserInteracting.current) {
+      // 2. Lock-on Tracking for moving planets or focused target: maintain OrbitControls center
       const targetDelta = new THREE.Vector3().subVectors(targetPos, controls.target);
       if (targetDelta.lengthSq() > 0.0001) {
         controls.target.copy(targetPos);
@@ -158,15 +152,15 @@ export function CameraController({
       ref={controlsRef}
       enableDamping={true}
       dampingFactor={0.05}
-      minDistance={3}
-      maxDistance={400}
+      minDistance={2}
+      maxDistance={450}
       minPolarAngle={0.01}
       maxPolarAngle={Math.PI - 0.01}
       enableRotate={true}
       enableZoom={true}
       enablePan={true}
       rotateSpeed={0.8}
-      zoomSpeed={1.0}
+      zoomSpeed={1.1}
       panSpeed={0.8}
     />
   );

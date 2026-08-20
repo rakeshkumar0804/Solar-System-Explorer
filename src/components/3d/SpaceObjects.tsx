@@ -50,6 +50,16 @@ function BlackHoleObject({
         <sphereGeometry args={[2.4 * obj.scale * 0.3, 32, 32]} />
         <meshBasicMaterial color="#000000" />
       </mesh>
+      <mesh
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(obj.id);
+        }}
+        visible={false}
+      >
+        <sphereGeometry args={[obj.scale * 4.0, 16, 16]} />
+        <meshBasicMaterial />
+      </mesh>
 
       {/* Photon Sphere Ring */}
       <mesh rotation={[Math.PI / 3, 0, 0]}>
