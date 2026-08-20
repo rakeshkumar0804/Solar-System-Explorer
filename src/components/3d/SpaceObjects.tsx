@@ -44,7 +44,7 @@ function BlackHoleObject({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
       >
         <sphereGeometry args={[2.4 * obj.scale * 0.3, 32, 32]} />
@@ -53,7 +53,7 @@ function BlackHoleObject({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
         visible={false}
       >
@@ -130,7 +130,7 @@ function BlackHoleObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(obj.id);
+              document.body.style.cursor = "pointer"; onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-orange-300 border-orange-500/50 shadow-2xl hover:border-orange-400 hover:bg-[#150a2a]"
           >
@@ -171,7 +171,7 @@ function WormholeObject({
         ref={funnelRef}
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
       >
         {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -208,7 +208,7 @@ function WormholeObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(obj.id);
+              document.body.style.cursor = "pointer"; onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-pink-300 border-pink-500/50 shadow-2xl hover:border-pink-400 hover:bg-[#150a2a]"
           >
@@ -250,7 +250,7 @@ function PulsarObject({
         ref={coreRef}
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
       >
         <octahedronGeometry args={[1.6, 0]} />
@@ -297,7 +297,7 @@ function PulsarObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(obj.id);
+              document.body.style.cursor = "pointer"; onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-purple-300 border-purple-500/50 shadow-2xl hover:border-purple-400 hover:bg-[#150a2a]"
           >
@@ -374,7 +374,7 @@ function CometObject({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
       >
         <sphereGeometry args={[0.5, 16, 16]} />
@@ -423,7 +423,7 @@ function CometObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(obj.id);
+              document.body.style.cursor = "pointer"; onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-cyan-300 border-cyan-500/50 shadow-2xl hover:border-cyan-400 hover:bg-[#150a2a]"
           >
@@ -495,7 +495,7 @@ function VolumetricDeepSpaceEntity({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
       >
         <sphereGeometry args={[obj.scale * 2.5, 24, 24]} />
@@ -515,7 +515,7 @@ function VolumetricDeepSpaceEntity({
         geometry={geom}
         onClick={(e) => {
           e.stopPropagation();
-          onSelect(obj.id);
+          document.body.style.cursor = "pointer"; onSelect(obj.id);
         }}
       >
         <pointsMaterial
@@ -548,7 +548,7 @@ function VolumetricDeepSpaceEntity({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(obj.id);
+              document.body.style.cursor = "pointer"; onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-purple-200 border-purple-500/50 shadow-2xl hover:border-purple-400 hover:bg-[#150a2a]"
           >

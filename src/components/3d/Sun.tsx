@@ -58,33 +58,52 @@ export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, on
           e.stopPropagation();
           onSelect(data.id);
         }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'auto';
+        }}
       >
         <sphereGeometry args={[data.size, 64, 64]} />
         <meshBasicMaterial
           map={sunTexture}
-          color="#ffaa00"
+          color="#ffcc00"
         />
       </mesh>
 
-      {/* 2. Soft Spherical Radial Glow Halo */}
-      <mesh ref={glowMeshRef} scale={1.2}>
-        <sphereGeometry args={[data.size, 32, 32]} />
+      {/* 2. Soft Volumetric Solar Glow Halo Layer */}
+      <mesh
+        ref={glowMeshRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(data.id);
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'auto';
+        }}
+      >
+        <sphereGeometry args={[data.size * 1.08, 32, 32]} />
         <meshBasicMaterial
           color="#ff6600"
           transparent
-          opacity={0.2}
+          opacity={0.22}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
-          side={THREE.BackSide}
         />
       </mesh>
 
-      {/* Selected Indicator Ring */}
+      {/* Selected Target Ring Accent */}
       {isSelected && (
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[data.size * 1.45, data.size * 1.55, 64]} />
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[data.size * 1.35, data.size * 1.45, 64]} />
           <meshBasicMaterial
-            color="#c084fc"
+            color="#ffaa00"
             transparent
             opacity={0.8}
             side={THREE.DoubleSide}
@@ -94,20 +113,33 @@ export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, on
         </mesh>
       )}
 
-      {/* 3D Clean Text Label */}
+      {/* 3. 3D HTML Label */}
       {showLabels && (
-        <Html position={[0, data.size + 1.8, 0]} center distanceFactor={70} zIndexRange={[0, 10]}>
+        <Html
+          position={[0, data.size + 1.8, 0]}
+          center
+          distanceFactor={60}
+          zIndexRange={[0, 10]}
+        >
           <div
             onClick={(e) => {
               e.stopPropagation();
               onSelect(data.id);
             }}
-            className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-300 pointer-events-auto select-none backdrop-blur-md border ${
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = 'pointer';
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = 'auto';
+            }}
+            className={`px-3 py-1 rounded-full text-xs font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border ${
               isSelected
-                ? 'bg-purple-900/60 text-amber-200 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] scale-110'
-                : 'bg-[#0a0515]/90 text-amber-300 border-purple-800/50 hover:border-amber-400 hover:bg-black/90'
+                ? 'bg-amber-500/30 text-amber-200 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] scale-110'
+                : 'bg-black/70 text-amber-300 border-amber-500/40 hover:border-amber-400 hover:scale-105'
             }`}
           >
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             {data.name}
           </div>
         </Html>
