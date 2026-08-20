@@ -47,7 +47,7 @@ export function Scene({
       <Canvas
         camera={{ position: [30, 70, 100], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
-        onPointerMissed={() => { document.body.style.cursor = "auto"; onSelect(null); }}
+        onPointerMissed={() => { document.body.style.cursor = "var(--cursor-rocket)"; onSelect(null); }}
       >
         <color attach="background" args={[theme.bgSpace]} />
         <ambientLight color={theme.ambientColor} intensity={theme.ambientIntensity} />

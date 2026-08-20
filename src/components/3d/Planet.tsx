@@ -89,7 +89,7 @@ export function Planet({
             document.body.style.cursor = 'pointer';
           }}
           onPointerOut={() => {
-            document.body.style.cursor = 'auto';
+            document.body.style.cursor = 'var(--cursor-rocket)';
           }}
         >
           <sphereGeometry args={[data.size, 64, 64]} />
@@ -112,7 +112,7 @@ export function Planet({
               document.body.style.cursor = 'pointer';
             }}
             onPointerOut={() => {
-              document.body.style.cursor = 'auto';
+              document.body.style.cursor = 'var(--cursor-rocket)';
             }}
           >
             <sphereGeometry args={[data.size * 1.05, 32, 32]} />
@@ -139,7 +139,7 @@ export function Planet({
               document.body.style.cursor = 'pointer';
             }}
             onPointerOut={() => {
-              document.body.style.cursor = 'auto';
+              document.body.style.cursor = 'var(--cursor-rocket)';
             }}
           >
             <sphereGeometry args={[data.size * 1.015, 32, 32]} />
@@ -165,7 +165,7 @@ export function Planet({
               document.body.style.cursor = 'pointer';
             }}
             onPointerOut={() => {
-              document.body.style.cursor = 'auto';
+              document.body.style.cursor = 'var(--cursor-rocket)';
             }}
           >
             <ringGeometry
@@ -219,7 +219,7 @@ export function Planet({
                 document.body.style.cursor = 'pointer';
               }}
               onPointerOut={() => {
-                document.body.style.cursor = 'auto';
+                document.body.style.cursor = 'var(--cursor-rocket)';
               }}
             >
               <sphereGeometry args={[moon.size, 16, 16]} />
@@ -246,7 +246,7 @@ export function Planet({
               document.body.style.cursor = 'pointer';
             }}
             onPointerOut={() => {
-              document.body.style.cursor = 'auto';
+              document.body.style.cursor = 'var(--cursor-rocket)';
             }}
             className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border ${
               isSelected
