@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { getProceduralTexture } from '../../utils/proceduralTextures';
+import { useHoverCursor } from '../../utils/useHoverCursor';
 import type { CelestialBody, ThemeConfig } from '../../types/space';
 import { Html } from '@react-three/drei';
 
@@ -17,6 +18,7 @@ interface SunProps {
 export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, onSelect }: SunProps) {
   const sunMeshRef = useRef<THREE.Mesh>(null);
   const glowMeshRef = useRef<THREE.Mesh>(null);
+  const { hoverProps } = useHoverCursor();
 
   const sunTexture = useMemo(() => getProceduralTexture('sun'), []);
 
@@ -58,13 +60,7 @@ export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, on
           e.stopPropagation();
           onSelect(data.id);
         }}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          document.body.style.cursor = 'pointer';
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = 'var(--cursor-rocket)';
-        }}
+        {...hoverProps}
       >
         <sphereGeometry args={[data.size, 64, 64]} />
         <meshBasicMaterial
@@ -80,13 +76,7 @@ export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, on
           e.stopPropagation();
           onSelect(data.id);
         }}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          document.body.style.cursor = 'pointer';
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = 'var(--cursor-rocket)';
-        }}
+        {...hoverProps}
       >
         <sphereGeometry args={[data.size * 1.08, 32, 32]} />
         <meshBasicMaterial
@@ -125,13 +115,6 @@ export function Sun({ data, theme: _theme, timeSpeed, isSelected, showLabels, on
             onClick={(e) => {
               e.stopPropagation();
               onSelect(data.id);
-            }}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = 'pointer';
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = 'var(--cursor-rocket)';
             }}
             className={`px-3 py-1 rounded-full text-xs font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border ${
               isSelected

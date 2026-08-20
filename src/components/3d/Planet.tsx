@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { CelestialBody, ThemeConfig } from '../../types/space';
 import { getProceduralTexture, getRingTexture } from '../../utils/proceduralTextures';
+import { useHoverCursor } from '../../utils/useHoverCursor';
 import { Html } from '@react-three/drei';
 
 interface PlanetProps {
@@ -30,6 +31,7 @@ export function Planet({
   const meshRef = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
   const moonRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const { hoverProps } = useHoverCursor();
 
   const angleRef = useRef<number>(
     useMemo(() => {
@@ -84,13 +86,7 @@ export function Planet({
             e.stopPropagation();
             onSelect(data.id);
           }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            document.body.style.cursor = 'pointer';
-          }}
-          onPointerOut={() => {
-            document.body.style.cursor = 'var(--cursor-rocket)';
-          }}
+          {...hoverProps}
         >
           <sphereGeometry args={[data.size, 64, 64]} />
           <meshStandardMaterial
@@ -107,13 +103,7 @@ export function Planet({
               e.stopPropagation();
               onSelect(data.id);
             }}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = 'pointer';
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = 'var(--cursor-rocket)';
-            }}
+            {...hoverProps}
           >
             <sphereGeometry args={[data.size * 1.05, 32, 32]} />
             <meshBasicMaterial
@@ -134,13 +124,7 @@ export function Planet({
               e.stopPropagation();
               onSelect(data.id);
             }}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = 'pointer';
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = 'var(--cursor-rocket)';
-            }}
+            {...hoverProps}
           >
             <sphereGeometry args={[data.size * 1.015, 32, 32]} />
             <meshStandardMaterial
@@ -160,13 +144,7 @@ export function Planet({
               e.stopPropagation();
               onSelect(data.id);
             }}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = 'pointer';
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = 'var(--cursor-rocket)';
-            }}
+            {...hoverProps}
           >
             <ringGeometry
               args={[
@@ -214,13 +192,7 @@ export function Planet({
                 e.stopPropagation();
                 onSelect(data.id);
               }}
-              onPointerOver={(e) => {
-                e.stopPropagation();
-                document.body.style.cursor = 'pointer';
-              }}
-              onPointerOut={() => {
-                document.body.style.cursor = 'var(--cursor-rocket)';
-              }}
+              {...hoverProps}
             >
               <sphereGeometry args={[moon.size, 16, 16]} />
               <meshStandardMaterial color={moon.color} roughness={0.9} />
@@ -240,13 +212,6 @@ export function Planet({
             onClick={(e) => {
               e.stopPropagation();
               onSelect(data.id);
-            }}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = 'pointer';
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = 'var(--cursor-rocket)';
             }}
             className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border ${
               isSelected

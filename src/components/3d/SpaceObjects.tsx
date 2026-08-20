@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import type { DeepSpaceObject, ThemeConfig, CosmicToggles } from '../../types/space';
 import { getCircularParticleTexture } from '../../utils/proceduralTextures';
 import { Html } from '@react-three/drei';
+import { useHoverCursor } from '../../utils/useHoverCursor';
 
 interface SpaceObjectsProps {
   objects: DeepSpaceObject[];
@@ -29,6 +30,7 @@ function BlackHoleObject({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
+  const { hoverProps } = useHoverCursor();
   const diskRef = useRef<THREE.Mesh>(null);
 
   useFrame((_, delta) => {
@@ -44,8 +46,9 @@ function BlackHoleObject({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
       >
         <sphereGeometry args={[2.4 * obj.scale * 0.3, 32, 32]} />
         <meshBasicMaterial color="#000000" />
@@ -53,8 +56,9 @@ function BlackHoleObject({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
         visible={false}
       >
         <sphereGeometry args={[obj.scale * 4.0, 16, 16]} />
@@ -130,7 +134,7 @@ function BlackHoleObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              document.body.style.cursor = "pointer"; onSelect(obj.id);
+              onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-orange-300 border-orange-500/50 shadow-2xl hover:border-orange-400 hover:bg-[#150a2a]"
           >
@@ -156,6 +160,7 @@ function WormholeObject({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
+  const { hoverProps } = useHoverCursor();
   const funnelRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
@@ -171,8 +176,9 @@ function WormholeObject({
         ref={funnelRef}
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
       >
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <mesh key={i} position={[0, 0, -i * 0.8]}>
@@ -208,7 +214,7 @@ function WormholeObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              document.body.style.cursor = "pointer"; onSelect(obj.id);
+              onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-pink-300 border-pink-500/50 shadow-2xl hover:border-pink-400 hover:bg-[#150a2a]"
           >
@@ -234,6 +240,7 @@ function PulsarObject({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
+  const { hoverProps } = useHoverCursor();
   const coreRef = useRef<THREE.Mesh>(null);
 
   useFrame((_, delta) => {
@@ -250,8 +257,9 @@ function PulsarObject({
         ref={coreRef}
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
       >
         <octahedronGeometry args={[1.6, 0]} />
         <meshBasicMaterial color={obj.primaryColor} />
@@ -297,7 +305,7 @@ function PulsarObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              document.body.style.cursor = "pointer"; onSelect(obj.id);
+              onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-purple-300 border-purple-500/50 shadow-2xl hover:border-purple-400 hover:bg-[#150a2a]"
           >
@@ -323,6 +331,7 @@ function CometObject({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
+  const { hoverProps } = useHoverCursor();
   const cometRef = useRef<THREE.Group>(null);
   const circularParticleTex = useMemo(() => getCircularParticleTexture(), []);
 
@@ -374,8 +383,9 @@ function CometObject({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
       >
         <sphereGeometry args={[0.5, 16, 16]} />
         <meshBasicMaterial color="#ffffff" />
@@ -423,7 +433,7 @@ function CometObject({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              document.body.style.cursor = "pointer"; onSelect(obj.id);
+              onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-cyan-300 border-cyan-500/50 shadow-2xl hover:border-cyan-400 hover:bg-[#150a2a]"
           >
@@ -449,6 +459,7 @@ function VolumetricDeepSpaceEntity({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
+  const { hoverProps } = useHoverCursor();
   const pointsRef = useRef<THREE.Points>(null);
   const circularParticleTex = useMemo(() => getCircularParticleTexture(), []);
 
@@ -495,8 +506,9 @@ function VolumetricDeepSpaceEntity({
       <mesh
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
       >
         <sphereGeometry args={[obj.scale * 2.5, 24, 24]} />
         <meshBasicMaterial
@@ -515,8 +527,9 @@ function VolumetricDeepSpaceEntity({
         geometry={geom}
         onClick={(e) => {
           e.stopPropagation();
-          document.body.style.cursor = "pointer"; onSelect(obj.id);
+          onSelect(obj.id);
         }}
+        {...hoverProps}
       >
         <pointsMaterial
           size={0.45}
@@ -548,7 +561,7 @@ function VolumetricDeepSpaceEntity({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              document.body.style.cursor = "pointer"; onSelect(obj.id);
+              onSelect(obj.id);
             }}
             className="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#0a0515]/95 text-purple-200 border-purple-500/50 shadow-2xl hover:border-purple-400 hover:bg-[#150a2a]"
           >

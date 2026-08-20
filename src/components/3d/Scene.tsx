@@ -45,14 +45,12 @@ export function Scene({
   };
 
   return (
-    <div className="space-canvas-container w-full h-full absolute inset-0 z-0 pointer-events-auto touch-none">
+    <div className="w-full h-full absolute inset-0 z-0 pointer-events-auto touch-none">
       <Canvas
         camera={{ position: [0, 75, 125], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
         onPointerMissed={() => {
-          document.body.classList.remove('cursor-hand-active');
-          document.body.classList.remove('cursor-pointer-active');
-          document.body.style.cursor = 'var(--cursor-rocket)';
+          document.body.style.cursor = 'auto';
           onSelect(null);
         }}
       >
@@ -74,27 +72,6 @@ export function Scene({
           fade
           speed={0.4}
         />
-
-        {/* Invisible Orbital Disc Pointer Detector */}
-        <mesh
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, -0.1, 0]}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            document.body.classList.add('cursor-hand-active');
-          }}
-          onPointerOut={() => {
-            document.body.classList.remove('cursor-hand-active');
-          }}
-          onClick={(e) => {
-            if (e.delta < 5) {
-              onSelect(null);
-            }
-          }}
-        >
-          <circleGeometry args={[95, 64]} />
-          <meshBasicMaterial visible={false} transparent opacity={0} depthWrite={false} />
-        </mesh>
 
         {/* Central Sun */}
         <Sun
@@ -159,7 +136,7 @@ export function Scene({
           onSelect={(id) => onSelect(id)}
         />
 
-        {/* Smooth, User-Interruptible Orbit Controls with explicit reset trigger */}
+        {/* Camera Controls */}
         <CameraController
           selectedId={selectedId}
           resetTrigger={resetTrigger}
