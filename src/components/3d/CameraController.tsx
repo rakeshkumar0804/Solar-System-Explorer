@@ -13,12 +13,18 @@ interface CameraControllerProps {
   sunData: CelestialBody;
 }
 
+// Helper to verify 3D vector coordinates are strictly finite numbers
+function isFiniteVec(v: THREE.Vector3 | null | undefined): boolean {
+  if (!v) return false;
+  return Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z);
+}
+
 export function CameraController({
   selectedId,
   planetPositionsRef,
   deepSpaceObjects,
   planets,
-  sunData,
+  sunData: _sunData,
 }: CameraControllerProps) {
   const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -27,9 +33,14 @@ export function CameraController({
   const isAnimating = useRef(false);
   const prevSelectedId = useRef<string | null>(null);
 
-  // Default isometric solar system overview
+  // Default solar system overview coordinates
   const defaultCameraPos = useRef(new THREE.Vector3(30, 70, 100));
   const defaultTarget = useRef(new THREE.Vector3(0, 0, 0));
+
+  // Reusable vector scratchpads to prevent garbage collection spikes
+  const targetVec = useRef(new THREE.Vector3(0, 0, 0));
+  const desiredCamVec = useRef(new THREE.Vector3(30, 70, 100));
+  const offsetVec = useRef(new THREE.Vector3(0, 0, 0));
 
   useEffect(() => {
     const controls = controlsRef.current;
@@ -52,6 +63,7 @@ export function CameraController({
     };
   }, []);
 
+  // Trigger smooth one-time camera transition when selection changes
   useEffect(() => {
     if (selectedId !== prevSelectedId.current) {
       prevSelectedId.current = selectedId;
@@ -63,32 +75,53 @@ export function CameraController({
     const controls = controlsRef.current;
     if (!controls) return;
 
-    // Determine target world position & comfortable view distance
-    let targetPos: THREE.Vector3 = defaultTarget.current;
-    let minComfortableDistance = 30.0;
+    // 1. Guard against non-finite camera / controls state (Self-healing recovery)
+    if (!isFiniteVec(camera.position) || !isFiniteVec(controls.target)) {
+      camera.position.set(30, 70, 100);
+      controls.target.set(0, 0, 0);
+      controls.update();
+      isAnimating.current = false;
+      return;
+    }
 
-    if (selectedId === 'sun') {
-      targetPos = defaultTarget.current;
-      minComfortableDistance = Math.max(sunData.size * 4.0, 32.0);
-    } else if (selectedId) {
+    // 2. Safe clamped delta time
+    const safeDelta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0.001), 0.1) : 0.016;
+
+    // 3. Resolve target world coordinates
+    let minComfortableDistance = 30.0;
+    targetVec.current.set(0, 0, 0);
+
+    if (selectedId && selectedId !== 'sun') {
       const planet = planets.find((p) => p.id === selectedId);
       if (planet) {
         const livePos = planetPositionsRef.current?.get(planet.id);
-        if (livePos) {
-          targetPos = livePos;
+        if (livePos && isFiniteVec(livePos)) {
+          targetVec.current.copy(livePos);
           minComfortableDistance = Math.max(planet.size * 5.0, 26.0);
         }
       } else {
         const dObj = deepSpaceObjects.find((o) => o.id === selectedId);
-        if (dObj) {
-          targetPos = new THREE.Vector3(...dObj.position);
-          minComfortableDistance = Math.max(dObj.scale * 3.5, 34.0);
+        if (dObj && Array.isArray(dObj.position)) {
+          const [ox, oy, oz] = dObj.position;
+          if (Number.isFinite(ox) && Number.isFinite(oy) && Number.isFinite(oz)) {
+            targetVec.current.set(ox, oy, oz);
+            minComfortableDistance = Math.max(dObj.scale * 3.5, 34.0);
+          }
         }
       }
+    } else if (selectedId === 'sun') {
+      minComfortableDistance = 35.0;
+      targetVec.current.set(0, 0, 0);
     }
 
-    if (isAnimating.current) {
-      const lerpSpeed = THREE.MathUtils.clamp(delta * 3.2, 0.03, 0.14);
+    // Double-check resolved target vector is strictly finite
+    if (!isFiniteVec(targetVec.current)) {
+      targetVec.current.set(0, 0, 0);
+    }
+
+    // 4. Smooth Programmatic Lerp Transition
+    if (isAnimating.current && !isUserInteracting.current) {
+      const lerpSpeed = Math.min(Math.max(safeDelta * 3.5, 0.04), 0.15);
 
       if (!selectedId) {
         // Return to Solar System Overview
@@ -104,37 +137,44 @@ export function CameraController({
           isAnimating.current = false;
         }
       } else {
-        // Shift target smoothly to the selected object
-        controls.target.lerp(targetPos, lerpSpeed);
+        // Smoothly interpolate controls target to object coordinates
+        controls.target.lerp(targetVec.current, lerpSpeed);
 
-        // Preserve current view vector and ensure comfortable, wide viewing distance
-        const currentVec = new THREE.Vector3().subVectors(camera.position, controls.target);
-        if (currentVec.lengthSq() < 0.001) {
-          currentVec.set(minComfortableDistance * 0.4, minComfortableDistance * 0.5, minComfortableDistance * 0.7);
+        // Compute desired camera position with safe offset vector
+        offsetVec.current.subVectors(camera.position, controls.target);
+        if (offsetVec.current.lengthSq() < 0.01) {
+          offsetVec.current.set(minComfortableDistance * 0.4, minComfortableDistance * 0.5, minComfortableDistance * 0.7);
         }
 
-        // Clamp distance to a comfortable non-aggressive framing
-        const currentDist = currentVec.length();
+        const currentDist = offsetVec.current.length();
         const targetDistance = Math.min(Math.max(currentDist * 0.8, minComfortableDistance), 85.0);
-        currentVec.normalize().multiplyScalar(targetDistance);
 
-        const desiredCamPos = new THREE.Vector3().addVectors(targetPos, currentVec);
-        camera.position.lerp(desiredCamPos, lerpSpeed);
+        if (Number.isFinite(targetDistance) && targetDistance > 0) {
+          offsetVec.current.normalize().multiplyScalar(targetDistance);
+        } else {
+          offsetVec.current.set(0, minComfortableDistance * 0.5, minComfortableDistance);
+        }
 
-        const distTarget = controls.target.distanceTo(targetPos);
-        const distPos = camera.position.distanceTo(desiredCamPos);
+        desiredCamVec.current.addVectors(targetVec.current, offsetVec.current);
+
+        if (isFiniteVec(desiredCamVec.current)) {
+          camera.position.lerp(desiredCamVec.current, lerpSpeed);
+        }
+
+        const distTarget = controls.target.distanceTo(targetVec.current);
+        const distPos = camera.position.distanceTo(desiredCamVec.current);
 
         if (distTarget < 0.15 && distPos < 0.15) {
-          controls.target.copy(targetPos);
+          controls.target.copy(targetVec.current);
           isAnimating.current = false;
         }
       }
     } else if (selectedId && !isUserInteracting.current) {
-      // Dynamic orbital tracking without abrupt camera movement
-      const targetDelta = new THREE.Vector3().subVectors(targetPos, controls.target);
-      if (targetDelta.lengthSq() > 0.0001) {
-        controls.target.copy(targetPos);
-        camera.position.add(targetDelta);
+      // 5. Dynamic orbital tracking for orbiting planets without camera jump
+      offsetVec.current.subVectors(targetVec.current, controls.target);
+      if (offsetVec.current.lengthSq() > 0.0001 && isFiniteVec(offsetVec.current)) {
+        controls.target.copy(targetVec.current);
+        camera.position.add(offsetVec.current);
       }
     }
 
