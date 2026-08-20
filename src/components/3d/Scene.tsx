@@ -86,7 +86,6 @@ export function Scene({
           <HabitableZone
             innerRadius={21.5}
             outerRadius={28.5}
-            showLabels={showLabels}
           />
         )}
 

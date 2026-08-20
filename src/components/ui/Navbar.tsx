@@ -29,15 +29,15 @@ export function Navbar({
         </p>
       </div>
 
-      {/* Top Right Controls (Compare + Sound + Close/Reset) */}
-      <div className="pointer-events-auto flex items-center gap-2">
+      {/* Top Right Controls with Proper Gap and Spacing */}
+      <div className="pointer-events-auto flex items-center gap-3 pr-2">
         {onOpenCompare && (
           <button
             onClick={onOpenCompare}
-            className="h-9 px-3 rounded-full flex items-center gap-1.5 bg-gradient-to-r from-purple-900/60 to-purple-950/70 hover:from-purple-800/80 hover:to-purple-900/80 border border-purple-600/40 text-purple-200 hover:text-white transition-all shadow-lg text-xs font-bold cursor-pointer backdrop-blur-md"
+            className="h-9 px-3.5 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-900/60 to-purple-950/70 hover:from-purple-800/80 hover:to-purple-900/80 border border-purple-600/40 text-purple-200 hover:text-white transition-all shadow-lg text-xs font-bold cursor-pointer backdrop-blur-md"
             title="Compare Celestial Bodies"
           >
-            <Scale className="w-3.5 h-3.5 text-purple-300" />
+            <Scale className="w-3.5 h-3.5 text-purple-300 shrink-0" />
             <span className="hidden sm:inline">Compare</span>
           </button>
         )}

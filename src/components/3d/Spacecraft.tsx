@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { SpacecraftData } from '../../types/space';
@@ -15,19 +15,17 @@ interface SpacecraftProps {
 // 1. Voyager 1 Model & Escape Trajectory
 function VoyagerModel({
   craft,
-  showLabels,
   isSelected,
   onSelect,
 }: {
   craft: SpacecraftData;
   timeSpeed: number;
-  showLabels: boolean;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
   const meshGroupRef = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState(false);
 
-  // Hyperbolic Interstellar Trajectory Line
   const trajectoryLine = useMemo(() => {
     const curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(24, 0, 0),
@@ -51,6 +49,15 @@ function VoyagerModel({
     <group>
       <primitive object={trajectoryLine} />
 
+      {/* Pulsing Interstellar Position Tip */}
+      <group position={craft.position}>
+        <pointLight intensity={1.5} distance={10} color="#fbbf24" decay={1} />
+        <mesh>
+          <sphereGeometry args={[0.25, 16, 16]} />
+          <meshBasicMaterial color="#fbbf24" />
+        </mesh>
+      </group>
+
       {/* Spacecraft Probe Mesh */}
       <group
         ref={meshGroupRef}
@@ -59,33 +66,33 @@ function VoyagerModel({
           e.stopPropagation();
           onSelect(craft.id);
         }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={() => setHovered(false)}
         scale={[craft.scale, craft.scale, craft.scale]}
       >
-        {/* High-Gain Antenna Dish */}
         <mesh rotation={[Math.PI / 4, 0, 0]}>
           <cylinderGeometry args={[0.7, 0.1, 0.25, 24]} />
           <meshStandardMaterial color="#f8fafc" metalness={0.8} roughness={0.3} />
         </mesh>
 
-        {/* Central Bus Structure */}
         <mesh position={[0, -0.2, 0]}>
           <boxGeometry args={[0.5, 0.4, 0.5]} />
           <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
         </mesh>
 
-        {/* RTG Nuclear Power Generator Boom */}
         <mesh position={[0.8, -0.2, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.08, 0.08, 1.2, 8]} />
           <meshStandardMaterial color="#64748b" metalness={0.7} roughness={0.4} />
         </mesh>
 
-        {/* Magnetometer Boom */}
         <mesh position={[-0.8, -0.2, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <cylinderGeometry args={[0.04, 0.04, 1.4, 8]} />
           <meshStandardMaterial color="#475569" />
         </mesh>
 
-        {/* Selected Highlight Ring */}
         {isSelected && (
           <mesh>
             <ringGeometry args={[1.5, 1.7, 32]} />
@@ -100,15 +107,15 @@ function VoyagerModel({
           </mesh>
         )}
 
-        {/* 3D Label */}
-        {showLabels && (
+        {/* Dynamic Hover/Selection Badge Only */}
+        {(hovered || isSelected) && (
           <Html position={[0, 1.4, 0]} center distanceFactor={70} zIndexRange={[0, 10]}>
             <div
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect(craft.id);
               }}
-              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#181102]/90 text-yellow-300 border-yellow-500/50 shadow-lg hover:border-yellow-300"
+              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#181102]/95 text-yellow-300 border-yellow-500/60 shadow-xl scale-105"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
               {craft.name}
@@ -124,19 +131,17 @@ function VoyagerModel({
 function JwstModel({
   craft,
   timeSpeed,
-  showLabels,
   isSelected,
   onSelect,
 }: {
   craft: SpacecraftData;
   timeSpeed: number;
-  showLabels: boolean;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
   const meshGroupRef = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState(false);
 
-  // Halo Lissajous Orbit Loop around L2
   const haloLine = useMemo(() => {
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i <= 48; i++) {
@@ -153,7 +158,7 @@ function JwstModel({
     const mat = new THREE.LineBasicMaterial({
       color: '#38bdf8',
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.5,
       depthWrite: false,
     });
     return new THREE.Line(geom, mat);
@@ -173,7 +178,6 @@ function JwstModel({
     <group>
       <primitive object={haloLine} />
 
-      {/* JWST Spacecraft Mesh */}
       <group
         ref={meshGroupRef}
         position={craft.position}
@@ -181,27 +185,28 @@ function JwstModel({
           e.stopPropagation();
           onSelect(craft.id);
         }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={() => setHovered(false)}
         scale={[craft.scale, craft.scale, craft.scale]}
       >
-        {/* Five-Layer Silver-Kapton Sunshield */}
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <boxGeometry args={[1.5, 0.9, 0.04]} />
           <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.1} />
         </mesh>
 
-        {/* Primary Hexagonal Gold Mirror Array */}
         <mesh position={[0, 0.4, 0.1]}>
           <cylinderGeometry args={[0.55, 0.55, 0.06, 6]} />
           <meshStandardMaterial color="#f59e0b" metalness={0.98} roughness={0.1} />
         </mesh>
 
-        {/* Secondary Mirror Support Struts */}
         <mesh position={[0, 0.5, 0.5]} rotation={[Math.PI / 4, 0, 0]}>
           <coneGeometry args={[0.04, 0.8, 4]} />
           <meshStandardMaterial color="#1e293b" />
         </mesh>
 
-        {/* Selected Highlight Ring */}
         {isSelected && (
           <mesh>
             <ringGeometry args={[1.4, 1.55, 32]} />
@@ -216,15 +221,14 @@ function JwstModel({
           </mesh>
         )}
 
-        {/* 3D Label */}
-        {showLabels && (
+        {(hovered || isSelected) && (
           <Html position={[0, 1.2, 0]} center distanceFactor={70} zIndexRange={[0, 10]}>
             <div
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect(craft.id);
               }}
-              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#021826]/90 text-cyan-300 border-cyan-500/50 shadow-lg hover:border-cyan-300"
+              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#021826]/95 text-cyan-300 border-cyan-500/60 shadow-xl scale-105"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               JWST (L2)
@@ -240,19 +244,17 @@ function JwstModel({
 function ParkerModel({
   craft,
   timeSpeed,
-  showLabels,
   isSelected,
   onSelect,
 }: {
   craft: SpacecraftData;
   timeSpeed: number;
-  showLabels: boolean;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) {
   const meshGroupRef = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState(false);
 
-  // Eccentric Solar Perihelion Orbit Ellipse
   const orbitLine = useMemo(() => {
     const pts: THREE.Vector3[] = [];
     const a = 13.5;
@@ -273,7 +275,7 @@ function ParkerModel({
     const mat = new THREE.LineBasicMaterial({
       color: '#ef4444',
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.5,
       depthWrite: false,
     });
     return new THREE.Line(geom, mat);
@@ -297,7 +299,6 @@ function ParkerModel({
     <group>
       <primitive object={orbitLine} />
 
-      {/* Parker Spacecraft Mesh */}
       <group
         ref={meshGroupRef}
         position={craft.position}
@@ -305,21 +306,23 @@ function ParkerModel({
           e.stopPropagation();
           onSelect(craft.id);
         }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={() => setHovered(false)}
         scale={[craft.scale, craft.scale, craft.scale]}
       >
-        {/* Carbon-Composite Heat Shield */}
         <mesh position={[-0.4, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
           <cylinderGeometry args={[0.5, 0.5, 0.1, 24]} />
           <meshStandardMaterial color="#f8fafc" roughness={0.1} />
         </mesh>
 
-        {/* Spacecraft Bus Chassis */}
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[0.6, 0.35, 0.35]} />
           <meshStandardMaterial color="#334155" metalness={0.8} />
         </mesh>
 
-        {/* Retractable Solar Wings */}
         <mesh position={[0.1, 0, 0.55]} rotation={[Math.PI / 6, 0, 0]}>
           <boxGeometry args={[0.3, 0.02, 0.7]} />
           <meshStandardMaterial color="#0284c7" metalness={0.9} />
@@ -329,7 +332,6 @@ function ParkerModel({
           <meshStandardMaterial color="#0284c7" metalness={0.9} />
         </mesh>
 
-        {/* Selected Highlight Ring */}
         {isSelected && (
           <mesh>
             <ringGeometry args={[1.3, 1.45, 32]} />
@@ -344,15 +346,14 @@ function ParkerModel({
           </mesh>
         )}
 
-        {/* 3D Label */}
-        {showLabels && (
+        {(hovered || isSelected) && (
           <Html position={[0, 1.2, 0]} center distanceFactor={70} zIndexRange={[0, 10]}>
             <div
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect(craft.id);
               }}
-              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#200505]/90 text-red-300 border-red-500/50 shadow-lg hover:border-red-300"
+              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wide flex items-center gap-1.5 cursor-pointer transition-all duration-200 pointer-events-auto select-none backdrop-blur-md border bg-[#200505]/95 text-red-300 border-red-500/60 shadow-xl scale-105"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
               Parker Solar Probe
@@ -367,7 +368,6 @@ function ParkerModel({
 export function Spacecraft({
   crafts,
   timeSpeed,
-  showLabels,
   selectedId,
   onSelect,
 }: SpacecraftProps) {
@@ -382,7 +382,6 @@ export function Spacecraft({
                 key={craft.id}
                 craft={craft}
                 timeSpeed={timeSpeed}
-                showLabels={showLabels}
                 isSelected={isSelected}
                 onSelect={onSelect}
               />
@@ -393,7 +392,6 @@ export function Spacecraft({
                 key={craft.id}
                 craft={craft}
                 timeSpeed={timeSpeed}
-                showLabels={showLabels}
                 isSelected={isSelected}
                 onSelect={onSelect}
               />
@@ -404,7 +402,6 @@ export function Spacecraft({
                 key={craft.id}
                 craft={craft}
                 timeSpeed={timeSpeed}
-                showLabels={showLabels}
                 isSelected={isSelected}
                 onSelect={onSelect}
               />
