@@ -10,6 +10,7 @@ import { AsteroidBelt } from './AsteroidBelt';
 import { SpaceObjects } from './SpaceObjects';
 import { HabitableZone } from './HabitableZone';
 import { CameraController } from './CameraController';
+import { CursorManager } from './CursorManager';
 
 interface SceneProps {
   sunData: CelestialBody;
@@ -39,6 +40,7 @@ export function Scene({
   onSelect,
 }: SceneProps) {
   const planetPositions = useRef(new Map<string, THREE.Vector3>());
+  const interactiveGroupRef = useRef<THREE.Group>(null);
 
   const handlePositionUpdate = (id: string, pos: THREE.Vector3) => {
     planetPositions.current.set(id, pos.clone());
@@ -49,10 +51,7 @@ export function Scene({
       <Canvas
         camera={{ position: [0, 75, 125], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
-        onPointerMissed={() => {
-          document.body.style.cursor = 'auto';
-          onSelect(null);
-        }}
+        onPointerMissed={() => onSelect(null)}
       >
         <color attach="background" args={[theme.bgSpace]} />
         <ambientLight color={theme.ambientColor} intensity={theme.ambientIntensity} />
@@ -73,68 +72,74 @@ export function Scene({
           speed={0.4}
         />
 
-        {/* Central Sun */}
-        <Sun
-          data={sunData}
-          theme={theme}
-          timeSpeed={timeSpeed}
-          isSelected={selectedId === 'sun'}
-          showLabels={showLabels}
-          onSelect={(id) => onSelect(id)}
-        />
+        {/* Centralized Raycast Cursor Manager for 100% Reliable Hover Detection */}
+        <CursorManager interactiveGroupRef={interactiveGroupRef} />
 
-        {/* Goldilocks Habitable Zone Volumetric Ring */}
-        {cosmicToggles?.habitableZone && (
-          <HabitableZone
-            innerRadius={21.5}
-            outerRadius={28.5}
+        {/* Group containing all interactive clickable and hoverable elements */}
+        <group ref={interactiveGroupRef}>
+          {/* Central Sun */}
+          <Sun
+            data={sunData}
+            theme={theme}
+            timeSpeed={timeSpeed}
+            isSelected={selectedId === 'sun'}
+            showLabels={showLabels}
+            onSelect={(id) => onSelect(id)}
           />
-        )}
 
-        {/* Concentric Planetary Orbits */}
-        {showOrbits &&
-          planets.map((planet) => (
-            <OrbitTrail
-              key={'orbit_' + planet.id}
-              radius={planet.orbitRadius}
-              color={theme.orbitColor}
-              opacity={theme.orbitOpacity}
+          {/* Goldilocks Habitable Zone Volumetric Ring */}
+          {cosmicToggles?.habitableZone && (
+            <HabitableZone
+              innerRadius={21.5}
+              outerRadius={28.5}
+            />
+          )}
+
+          {/* Concentric Planetary Orbits with Hover Line Hit Ribbons */}
+          {showOrbits &&
+            planets.map((planet) => (
+              <OrbitTrail
+                key={'orbit_' + planet.id}
+                radius={planet.orbitRadius}
+                color={theme.orbitColor}
+                opacity={theme.orbitOpacity}
+              />
+            ))}
+
+          {/* 3D Planets & Moons */}
+          {planets.map((planet) => (
+            <Planet
+              key={planet.id}
+              data={planet}
+              theme={theme}
+              timeSpeed={timeSpeed}
+              isSelected={selectedId === planet.id}
+              showLabels={showLabels}
+              showAtmosphere={cosmicToggles?.atmospheres ?? true}
+              onSelect={(id) => onSelect(id)}
+              onPositionUpdate={handlePositionUpdate}
             />
           ))}
 
-        {/* 3D Planets & Moons */}
-        {planets.map((planet) => (
-          <Planet
-            key={planet.id}
-            data={planet}
+          {/* Instanced Asteroid Belt */}
+          {cosmicToggles?.asteroidBelt && (
+            <AsteroidBelt
+              count={650}
+              timeSpeed={timeSpeed}
+            />
+          )}
+
+          {/* Deep Space Objects & Cosmic Phenomena */}
+          <SpaceObjects
+            objects={deepSpaceObjects}
             theme={theme}
             timeSpeed={timeSpeed}
-            isSelected={selectedId === planet.id}
             showLabels={showLabels}
-            showAtmosphere={cosmicToggles?.atmospheres ?? true}
+            cosmicToggles={cosmicToggles}
+            selectedId={selectedId}
             onSelect={(id) => onSelect(id)}
-            onPositionUpdate={handlePositionUpdate}
           />
-        ))}
-
-        {/* Instanced Asteroid Belt */}
-        {cosmicToggles?.asteroidBelt && (
-          <AsteroidBelt
-            count={650}
-            timeSpeed={timeSpeed}
-          />
-        )}
-
-        {/* Deep Space Objects & Cosmic Phenomena */}
-        <SpaceObjects
-          objects={deepSpaceObjects}
-          theme={theme}
-          timeSpeed={timeSpeed}
-          showLabels={showLabels}
-          cosmicToggles={cosmicToggles}
-          selectedId={selectedId}
-          onSelect={(id) => onSelect(id)}
-        />
+        </group>
 
         {/* Camera Controls */}
         <CameraController

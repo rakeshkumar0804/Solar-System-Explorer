@@ -21,11 +21,7 @@
 }
 
 canvas {
-  cursor: grab;
-}
-
-canvas:active {
-  cursor: grabbing;
+  cursor: default;
 }
 
 button, select, input[type="range"], [role="button"], .cursor-pointer {
