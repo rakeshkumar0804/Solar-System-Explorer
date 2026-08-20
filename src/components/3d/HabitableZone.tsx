@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
+import { Html } from '@react-three/drei';
 
 interface HabitableZoneProps {
   innerRadius?: number;
@@ -72,6 +73,18 @@ export function HabitableZone({
           )
         }
       />
+
+      {/* 4. Minimal, Non-Blocking 3D Outer Edge Badge */}
+      <Html
+        position={[0, 0, -(outerRadius + 0.8)]}
+        center
+        distanceFactor={80}
+        zIndexRange={[0, 10]}
+      >
+        <div className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.2)] backdrop-blur-md whitespace-nowrap pointer-events-none select-none">
+          ? Habitable Zone (0.95 - 1.37 AU)
+        </div>
+      </Html>
     </group>
   );
 }
