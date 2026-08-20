@@ -31,7 +31,7 @@ export function CameraController({
   const prevSelectedId = useRef<string | null>(null);
 
   // Default solar system overview
-  const defaultCameraPos = useRef(new THREE.Vector3(0, 48, 95));
+  const defaultCameraPos = useRef(new THREE.Vector3(30, 70, 100));
   const defaultTarget = useRef(new THREE.Vector3(0, 0, 0));
 
   useEffect(() => {

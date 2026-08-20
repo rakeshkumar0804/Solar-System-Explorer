@@ -48,7 +48,7 @@ export function Scene({
   return (
     <div className="w-full h-full absolute inset-0 z-0 cursor-grab active:cursor-grabbing pointer-events-auto touch-none">
       <Canvas
-        camera={{ position: [0, 48, 95], fov: 45, near: 0.1, far: 1000 }}
+        camera={{ position: [30, 70, 100], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
         onPointerMissed={() => onSelect(null)}
       >
