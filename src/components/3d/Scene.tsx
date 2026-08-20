@@ -47,7 +47,7 @@ export function Scene({
   return (
     <div className="space-canvas-container w-full h-full absolute inset-0 z-0 pointer-events-auto touch-none">
       <Canvas
-        camera={{ position: [30, 70, 100], fov: 45, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 75, 125], fov: 45, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
         onPointerMissed={() => {
           document.body.classList.remove('cursor-hand-active');

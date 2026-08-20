@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import type { CelestialBody, DeepSpaceObject } from '../../types/space';
 
 // Constant default wide-angle isometric view
-export const DEFAULT_CAMERA_POS = new THREE.Vector3(30, 70, 100);
+export const DEFAULT_CAMERA_POS = new THREE.Vector3(0, 75, 125);
 export const DEFAULT_CAMERA_TARGET = new THREE.Vector3(0, 0, 0);
 
 interface CameraControllerProps {
