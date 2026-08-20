@@ -46,6 +46,9 @@ function App() {
   const [compareA, setCompareA] = useState('earth');
   const [compareB, setCompareB] = useState('mars');
 
+  // Trigger state incremented each time the user clicks Overview / resets view
+  const [resetTrigger, setResetTrigger] = useState(0);
+
   // Automated Cosmic Tour State
   const [isTourActive, setIsTourActive] = useState(false);
   const tourIndexRef = useRef(0);
@@ -82,6 +85,7 @@ function App() {
       selectedBodyId: null,
       comparisonBodyId: null,
     }));
+    setResetTrigger((prev) => prev + 1);
     spaceAudio.playHoverSound();
   }, []);
 
@@ -225,6 +229,7 @@ function App() {
         showLabels={settings.showLabels}
         cosmicToggles={settings.cosmicToggles}
         selectedId={settings.selectedBodyId}
+        resetTrigger={resetTrigger}
         onSelect={handleSelectObject}
       />
 

@@ -34,6 +34,7 @@ export function Navbar({
   onOpenCompare,
 }: NavbarProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isOverviewPressed, setIsOverviewPressed] = useState(false);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -52,6 +53,9 @@ export function Navbar({
   };
 
   const handleOverviewClick = () => {
+    setIsOverviewPressed(true);
+    setTimeout(() => setIsOverviewPressed(false), 300);
+
     if (onResetOverview) {
       onResetOverview();
     } else {
@@ -75,10 +79,14 @@ export function Navbar({
       <div className="pointer-events-auto flex items-center gap-2 sm:gap-2.5">
         {/* 1. Navigation Pill Group */}
         <div className="flex items-center gap-1.5 sm:gap-2 bg-[#0c061a]/80 backdrop-blur-md p-1 rounded-full border border-purple-900/40 shadow-xl">
-          {/* Overview Button */}
+          {/* Overview Button with active pressed feedback */}
           <button
             onClick={handleOverviewClick}
-            className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer shadow-sm"
+            className={`h-8 px-3 rounded-full flex items-center gap-1.5 border transition-all text-xs font-semibold cursor-pointer active:scale-95 shadow-sm ${
+              isOverviewPressed
+                ? 'bg-purple-600/50 border-purple-400 text-white scale-95 shadow-[0_0_12px_rgba(168,85,247,0.5)]'
+                : 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white'
+            }`}
             title="Reset to Isometric Solar Overview (Center on Sun)"
           >
             <Eye className="w-3.5 h-3.5 text-purple-300 shrink-0" />
@@ -89,7 +97,7 @@ export function Navbar({
           {onToggleTour && (
             <button
               onClick={onToggleTour}
-              className={`h-8 px-3 rounded-full flex items-center gap-1.5 border transition-all text-xs font-semibold cursor-pointer ${
+              className={`h-8 px-3 rounded-full flex items-center gap-1.5 border transition-all text-xs font-semibold cursor-pointer active:scale-95 ${
                 isTourActive
                   ? 'bg-gradient-to-r from-amber-500/30 to-purple-600/40 border-amber-400/80 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.4)] animate-pulse'
                   : 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white'
@@ -111,7 +119,7 @@ export function Navbar({
           {onOpenCompare && (
             <button
               onClick={onOpenCompare}
-              className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+              className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer active:scale-95"
               title="Compare Celestial Bodies"
             >
               <Scale className="w-3.5 h-3.5 text-purple-300 shrink-0" />

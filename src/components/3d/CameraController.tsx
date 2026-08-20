@@ -5,8 +5,13 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import type { CelestialBody, DeepSpaceObject } from '../../types/space';
 
+// Constant default wide-angle isometric view
+export const DEFAULT_CAMERA_POS = new THREE.Vector3(30, 70, 100);
+export const DEFAULT_CAMERA_TARGET = new THREE.Vector3(0, 0, 0);
+
 interface CameraControllerProps {
   selectedId: string | null;
+  resetTrigger?: number;
   planetPositionsRef: React.RefObject<Map<string, THREE.Vector3>>;
   deepSpaceObjects: DeepSpaceObject[];
   planets: CelestialBody[];
@@ -15,6 +20,7 @@ interface CameraControllerProps {
 
 export function CameraController({
   selectedId,
+  resetTrigger = 0,
   planetPositionsRef,
   deepSpaceObjects,
   planets,
@@ -23,10 +29,15 @@ export function CameraController({
   const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const targetPos = useRef(new THREE.Vector3(0, 0, 0));
-  const defaultCameraPos = useRef(new THREE.Vector3(30, 70, 100));
   const isTransitioning = useRef(false);
 
-  // Set target ONCE when selectedId changes
+  // 1. Explicit Reset Trigger (e.g. Overview button or Esc key)
+  useEffect(() => {
+    targetPos.current.copy(DEFAULT_CAMERA_TARGET);
+    isTransitioning.current = true;
+  }, [resetTrigger]);
+
+  // 2. Set target ONCE when selectedId changes
   useEffect(() => {
     if (!controlsRef.current) return;
 
@@ -58,7 +69,7 @@ export function CameraController({
     }
 
     // Default overview center (Sun)
-    targetPos.current.set(0, 0, 0);
+    targetPos.current.copy(DEFAULT_CAMERA_TARGET);
     isTransitioning.current = true;
   }, [selectedId, planets, deepSpaceObjects, planetPositionsRef]);
 
@@ -74,8 +85,8 @@ export function CameraController({
       !Number.isFinite(controlsRef.current.target.y) ||
       !Number.isFinite(controlsRef.current.target.z)
     ) {
-      camera.position.set(30, 70, 100);
-      controlsRef.current.target.set(0, 0, 0);
+      camera.position.copy(DEFAULT_CAMERA_POS);
+      controlsRef.current.target.copy(DEFAULT_CAMERA_TARGET);
       controlsRef.current.update();
       isTransitioning.current = false;
       return;
@@ -83,21 +94,21 @@ export function CameraController({
 
     if (isTransitioning.current) {
       const safeDelta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0.001), 0.1) : 0.016;
-      const lerpSpeed = Math.min(safeDelta * 4.0, 0.18);
+      const lerpSpeed = Math.min(safeDelta * 3.5, 0.16);
 
       // Smoothly lerp towards target point
       controlsRef.current.target.lerp(targetPos.current, lerpSpeed);
 
       if (!selectedId) {
-        // Return to overview: also lerp camera position to elevated isometric distance
-        camera.position.lerp(defaultCameraPos.current, lerpSpeed);
+        // Return to overview: animate both camera position and target back to full solar system view
+        camera.position.lerp(DEFAULT_CAMERA_POS, lerpSpeed);
 
-        if (
-          controlsRef.current.target.distanceTo(targetPos.current) < 0.08 &&
-          camera.position.distanceTo(defaultCameraPos.current) < 0.08
-        ) {
-          controlsRef.current.target.copy(targetPos.current);
-          camera.position.copy(defaultCameraPos.current);
+        const distTgt = controlsRef.current.target.distanceTo(DEFAULT_CAMERA_TARGET);
+        const distPos = camera.position.distanceTo(DEFAULT_CAMERA_POS);
+
+        if (distTgt < 0.06 && distPos < 0.06) {
+          controlsRef.current.target.copy(DEFAULT_CAMERA_TARGET);
+          camera.position.copy(DEFAULT_CAMERA_POS);
           isTransitioning.current = false;
         }
       } else {

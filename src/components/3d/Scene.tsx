@@ -21,6 +21,7 @@ interface SceneProps {
   showLabels: boolean;
   cosmicToggles: CosmicToggles;
   selectedId: string | null;
+  resetTrigger?: number;
   onSelect: (id: string | null) => void;
 }
 
@@ -34,6 +35,7 @@ export function Scene({
   showLabels,
   cosmicToggles,
   selectedId,
+  resetTrigger = 0,
   onSelect,
 }: SceneProps) {
   const planetPositions = useRef(new Map<string, THREE.Vector3>());
@@ -85,7 +87,6 @@ export function Scene({
             document.body.classList.remove('cursor-hand-active');
           }}
           onClick={(e) => {
-            // Clicking empty orbital plane deselects focused object
             if (e.delta < 5) {
               onSelect(null);
             }
@@ -158,9 +159,10 @@ export function Scene({
           onSelect={(id) => onSelect(id)}
         />
 
-        {/* Smooth, User-Interruptible Orbit Controls */}
+        {/* Smooth, User-Interruptible Orbit Controls with explicit reset trigger */}
         <CameraController
           selectedId={selectedId}
+          resetTrigger={resetTrigger}
           planetPositionsRef={planetPositions}
           deepSpaceObjects={deepSpaceObjects}
           planets={planets}
