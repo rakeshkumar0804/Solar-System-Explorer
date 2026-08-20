@@ -71,13 +71,17 @@ function App() {
     setSettings((prev) => ({ ...prev, soundEnabled: !isMuted }));
   }, []);
 
-  const handleResetCamera = useCallback(() => {
+  const handleResetOverview = useCallback(() => {
     setIsTourActive(false);
     if (tourTimerRef.current) {
       clearInterval(tourTimerRef.current);
       tourTimerRef.current = null;
     }
-    setSettings((prev) => ({ ...prev, selectedBodyId: null }));
+    setSettings((prev) => ({
+      ...prev,
+      selectedBodyId: null,
+      comparisonBodyId: null,
+    }));
     spaceAudio.playHoverSound();
   }, []);
 
@@ -144,7 +148,7 @@ function App() {
           if (isCompareOpen) {
             setIsCompareOpen(false);
           } else {
-            handleResetCamera();
+            handleResetOverview();
           }
           break;
 
@@ -206,7 +210,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleResetCamera, handleSelectObject, handleToggleSound, isCompareOpen, settings.activeThemeId]);
+  }, [handleResetOverview, handleSelectObject, handleToggleSound, isCompareOpen, settings.activeThemeId]);
 
   return (
     <main className="w-screen h-screen relative overflow-hidden bg-[#05010d] text-slate-100 select-none">
@@ -233,6 +237,7 @@ function App() {
         isTourActive={isTourActive}
         onToggleSound={handleToggleSound}
         onSelectObject={handleSelectObject}
+        onResetOverview={handleResetOverview}
         onToggleTour={handleToggleTour}
         onOpenCompare={() => setIsCompareOpen(true)}
       />
@@ -242,14 +247,14 @@ function App() {
         settings={settings}
         theme={activeTheme}
         onUpdateSettings={setSettings}
-        onResetCamera={handleResetCamera}
+        onResetCamera={handleResetOverview}
       />
 
       {/* 4. Telemetry & Info Drawer */}
       <InfoPanel
         selectedItem={selectedItem}
         theme={activeTheme}
-        onClose={() => handleSelectObject(null)}
+        onClose={handleResetOverview}
         onCompareWithEarth={handleOpenCompareWith}
         onNextPlanet={handleNextPlanet}
       />

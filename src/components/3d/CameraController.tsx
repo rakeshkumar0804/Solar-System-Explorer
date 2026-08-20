@@ -23,9 +23,10 @@ export function CameraController({
   const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const targetPos = useRef(new THREE.Vector3(0, 0, 0));
+  const defaultCameraPos = useRef(new THREE.Vector3(30, 70, 100));
   const isTransitioning = useRef(false);
 
-  // Set target ONCE when selectedId changes - never continuously mutate in useFrame
+  // Set target ONCE when selectedId changes
   useEffect(() => {
     if (!controlsRef.current) return;
 
@@ -84,13 +85,26 @@ export function CameraController({
       const safeDelta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0.001), 0.1) : 0.016;
       const lerpSpeed = Math.min(safeDelta * 4.0, 0.18);
 
-      // Smoothly lerp towards static target snapshot
+      // Smoothly lerp towards target point
       controlsRef.current.target.lerp(targetPos.current, lerpSpeed);
 
-      // Complete transition once within tolerance
-      if (controlsRef.current.target.distanceTo(targetPos.current) < 0.05) {
-        controlsRef.current.target.copy(targetPos.current);
-        isTransitioning.current = false;
+      if (!selectedId) {
+        // Return to overview: also lerp camera position to elevated isometric distance
+        camera.position.lerp(defaultCameraPos.current, lerpSpeed);
+
+        if (
+          controlsRef.current.target.distanceTo(targetPos.current) < 0.08 &&
+          camera.position.distanceTo(defaultCameraPos.current) < 0.08
+        ) {
+          controlsRef.current.target.copy(targetPos.current);
+          camera.position.copy(defaultCameraPos.current);
+          isTransitioning.current = false;
+        }
+      } else {
+        if (controlsRef.current.target.distanceTo(targetPos.current) < 0.05) {
+          controlsRef.current.target.copy(targetPos.current);
+          isTransitioning.current = false;
+        }
       }
 
       controlsRef.current.update();

@@ -19,6 +19,7 @@ interface NavbarProps {
   isTourActive?: boolean;
   onToggleSound: () => void;
   onSelectObject: (id: string | null) => void;
+  onResetOverview?: () => void;
   onToggleTour?: () => void;
   onOpenCompare?: () => void;
 }
@@ -28,6 +29,7 @@ export function Navbar({
   isTourActive = false,
   onToggleSound,
   onSelectObject,
+  onResetOverview,
   onToggleTour,
   onOpenCompare,
 }: NavbarProps) {
@@ -49,6 +51,14 @@ export function Navbar({
     }
   };
 
+  const handleOverviewClick = () => {
+    if (onResetOverview) {
+      onResetOverview();
+    } else {
+      onSelectObject(null);
+    }
+  };
+
   return (
     <header className="absolute top-0 left-0 right-0 z-30 flex items-start justify-between p-4 sm:p-6 pointer-events-none select-none">
       {/* Top Left Header */}
@@ -67,9 +77,9 @@ export function Navbar({
         <div className="flex items-center gap-1.5 sm:gap-2 bg-[#0c061a]/80 backdrop-blur-md p-1 rounded-full border border-purple-900/40 shadow-xl">
           {/* Overview Button */}
           <button
-            onClick={() => onSelectObject(null)}
-            className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer"
-            title="Reset to Isometric Solar Overview"
+            onClick={handleOverviewClick}
+            className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer shadow-sm"
+            title="Reset to Isometric Solar Overview (Center on Sun)"
           >
             <Eye className="w-3.5 h-3.5 text-purple-300 shrink-0" />
             <span className="hidden md:inline">Overview</span>
