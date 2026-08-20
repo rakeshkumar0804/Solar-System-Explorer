@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import type { CelestialBody, DeepSpaceObject } from '../../types/space';
+import type { CelestialBody, DeepSpaceObject, SpacecraftData } from '../../types/space';
 
 interface CameraControllerProps {
   selectedId: string | null;
@@ -11,6 +11,7 @@ interface CameraControllerProps {
   deepSpaceObjects: DeepSpaceObject[];
   planets: CelestialBody[];
   sunData: CelestialBody;
+  spacecraft?: SpacecraftData[];
 }
 
 export function CameraController({
@@ -19,6 +20,7 @@ export function CameraController({
   deepSpaceObjects,
   planets,
   sunData,
+  spacecraft = [],
 }: CameraControllerProps) {
   const { camera, gl } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -27,20 +29,18 @@ export function CameraController({
   const isUserInteracting = useRef(false);
   const isAnimating = useRef(false);
   const prevSelectedId = useRef<string | null>(null);
-  const animationProgress = useRef(0);
 
   // Default solar system overview
   const defaultCameraPos = useRef(new THREE.Vector3(0, 48, 95));
   const defaultTarget = useRef(new THREE.Vector3(0, 0, 0));
 
-  // Hook into OrbitControls events to detect manual user interaction
   useEffect(() => {
     const controls = controlsRef.current;
     if (!controls) return;
 
     const handleStart = () => {
       isUserInteracting.current = true;
-      isAnimating.current = false; // Immediately cancel any programmatic lerp
+      isAnimating.current = false;
     };
 
     const handleEnd = () => {
@@ -50,7 +50,6 @@ export function CameraController({
     controls.addEventListener('start', handleStart);
     controls.addEventListener('end', handleEnd);
 
-    // Cancel animation on wheel zoom as well
     const domElement = gl.domElement;
     const handleWheel = () => {
       isAnimating.current = false;
@@ -64,12 +63,10 @@ export function CameraController({
     };
   }, [gl.domElement]);
 
-  // When selectedId changes, start a smooth one-time camera transition
   useEffect(() => {
     if (selectedId !== prevSelectedId.current) {
       prevSelectedId.current = selectedId;
       isAnimating.current = true;
-      animationProgress.current = 0;
     }
   }, [selectedId]);
 
@@ -77,13 +74,11 @@ export function CameraController({
     const controls = controlsRef.current;
     if (!controls) return;
 
-    // 1. If user is actively dragging/panning/zooming, let OrbitControls handle 100% of camera motion
     if (isUserInteracting.current) {
       controls.update();
       return;
     }
 
-    // 2. Determine target position and desired camera zoom distance
     let targetPos: THREE.Vector3 = defaultTarget.current;
     let targetZoomOffset = 70;
 
@@ -103,16 +98,20 @@ export function CameraController({
         if (dObj) {
           targetPos = new THREE.Vector3(...dObj.position);
           targetZoomOffset = dObj.scale * 3.5;
+        } else {
+          const craft = spacecraft.find((c) => c.id === selectedId);
+          if (craft) {
+            targetPos = new THREE.Vector3(...craft.position);
+            targetZoomOffset = 4.5;
+          }
         }
       }
     }
 
-    // 3. Programmatic Transition Animation
     if (isAnimating.current) {
       const lerpSpeed = THREE.MathUtils.clamp(delta * 3.0, 0.02, 0.12);
 
       if (!selectedId) {
-        // Returning to solar overview
         camera.position.lerp(defaultCameraPos.current, lerpSpeed);
         controls.target.lerp(defaultTarget.current, lerpSpeed);
 
@@ -125,10 +124,8 @@ export function CameraController({
           isAnimating.current = false;
         }
       } else {
-        // Focusing on a celestial object
         controls.target.lerp(targetPos, lerpSpeed);
 
-        // Compute desired camera position offset from target maintaining viewing angle
         const currentOffset = new THREE.Vector3().subVectors(camera.position, controls.target);
         if (currentOffset.lengthSq() < 0.001) {
           currentOffset.set(0, targetZoomOffset * 0.6, targetZoomOffset);
@@ -146,7 +143,6 @@ export function CameraController({
         }
       }
     } else if (selectedId && !isUserInteracting.current) {
-      // 4. Subtle lock-on tracking for moving planets: keep target centered on the planet smoothly
       const targetDelta = new THREE.Vector3().subVectors(targetPos, controls.target);
       if (targetDelta.lengthSq() > 0.0001) {
         controls.target.copy(targetPos);

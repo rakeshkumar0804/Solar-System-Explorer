@@ -10,11 +10,13 @@ import {
   Thermometer,
   Compass,
   Radio,
+  Clock,
+  Gauge,
 } from 'lucide-react';
-import type { CelestialBody, DeepSpaceObject, ThemeConfig } from '../../types/space';
+import type { CelestialBody, DeepSpaceObject, SpacecraftData, ThemeConfig } from '../../types/space';
 
 interface InfoPanelProps {
-  selectedItem: CelestialBody | DeepSpaceObject | null;
+  selectedItem: CelestialBody | DeepSpaceObject | SpacecraftData | null;
   theme: ThemeConfig;
   onClose: () => void;
   onCompareWithEarth?: (planetId: string) => void;
@@ -32,9 +34,13 @@ export function InfoPanel({
 
   if (!selectedItem) return null;
 
-  const isDeepSpace = 'stats' in selectedItem && 'classification' in selectedItem.stats;
+  const isSpacecraft = 'launchYear' in selectedItem;
+  const isDeepSpace = !isSpacecraft && 'stats' in selectedItem && 'classification' in selectedItem.stats;
+  const isPlanet = !isSpacecraft && !isDeepSpace;
+
+  const craft = isSpacecraft ? (selectedItem as SpacecraftData) : null;
   const deepSpace = isDeepSpace ? (selectedItem as DeepSpaceObject) : null;
-  const planet = !isDeepSpace ? (selectedItem as CelestialBody) : null;
+  const planet = isPlanet ? (selectedItem as CelestialBody) : null;
 
   return (
     <div className="fixed inset-0 z-[100] pointer-events-none flex justify-end">
@@ -81,7 +87,11 @@ export function InfoPanel({
               <span
                 className="w-3.5 h-3.5 rounded-full inline-block shrink-0 shadow-[0_0_10px_currentColor]"
                 style={{
-                  backgroundColor: planet ? planet.color : deepSpace?.primaryColor || '#c084fc',
+                  backgroundColor: planet
+                    ? planet.color
+                    : craft
+                    ? craft.trajectoryColor
+                    : deepSpace?.primaryColor || '#c084fc',
                 }}
               />
               {selectedItem.name}
@@ -96,7 +106,7 @@ export function InfoPanel({
             {[
               { id: 'overview', label: 'Overview', icon: Info },
               { id: 'stats', label: 'Telemetry', icon: Compass },
-              { id: 'science', label: isDeepSpace ? 'Science' : 'Geology', icon: Layers },
+              { id: 'science', label: craft ? 'Payload' : isDeepSpace ? 'Science' : 'Geology', icon: Layers },
               { id: 'facts', label: 'Facts', icon: Sparkles },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -126,14 +136,36 @@ export function InfoPanel({
             <div className="space-y-4">
               <div className="bg-purple-950/30 border border-purple-900/40 rounded-2xl p-4 space-y-2">
                 <div className="text-[11px] font-mono font-bold tracking-wider text-purple-300">
-                  COSMIC OVERVIEW
+                  MISSION / COSMIC OVERVIEW
                 </div>
                 <p className="text-purple-100/90 leading-relaxed text-xs">
                   {selectedItem.overview}
                 </p>
               </div>
 
-              {/* Highlights Badge Grid */}
+              {/* Spacecraft Quick Badges */}
+              {craft && (
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="bg-purple-950/20 border border-purple-900/30 rounded-xl p-3 space-y-0.5">
+                    <div className="text-[10px] font-mono text-purple-300/70 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-yellow-400" /> Launch Date
+                    </div>
+                    <div className="text-xs font-bold text-white">
+                      {craft.launchYear}
+                    </div>
+                  </div>
+                  <div className="bg-purple-950/20 border border-purple-900/30 rounded-xl p-3 space-y-0.5">
+                    <div className="text-[10px] font-mono text-purple-300/70 flex items-center gap-1">
+                      <Gauge className="w-3 h-3 text-cyan-400" /> Current Status
+                    </div>
+                    <div className="text-xs font-bold text-emerald-400">
+                      {craft.status}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Planet Highlights */}
               {planet && (
                 <div className="grid grid-cols-2 gap-2.5">
                   <div className="bg-purple-950/20 border border-purple-900/30 rounded-xl p-3 space-y-0.5">
@@ -171,7 +203,27 @@ export function InfoPanel({
           {/* TAB 2: TELEMETRY / PHYSICAL STATS */}
           {activeTab === 'stats' && (
             <div className="space-y-2.5">
-              {deepSpace ? (
+              {craft ? (
+                <div className="space-y-2">
+                  {[
+                    { label: 'Launch Year', val: craft.launchYear },
+                    { label: 'Mission Status', val: craft.status },
+                    { label: 'Current Velocity', val: craft.speed },
+                    { label: 'Distance from Earth', val: craft.distance },
+                    { label: 'Primary Payload', val: craft.primaryInstrument },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex justify-between items-center p-3 rounded-xl bg-purple-950/30 border border-purple-900/40"
+                    >
+                      <span className="text-[11px] font-mono text-purple-300/80">{item.label}</span>
+                      <span className="font-bold text-white text-right max-w-[55%] truncate">
+                        {item.val}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : deepSpace ? (
                 <div className="space-y-2">
                   {[
                     { label: 'Distance from Earth', val: deepSpace.stats.distanceFromEarth },
@@ -217,10 +269,17 @@ export function InfoPanel({
             </div>
           )}
 
-          {/* TAB 3: SCIENCE / GEOLOGY / MISSIONS */}
+          {/* TAB 3: SCIENCE / GEOLOGY / MISSIONS / PAYLOAD */}
           {activeTab === 'science' && (
             <div className="space-y-3">
-              {planet ? (
+              {craft ? (
+                <div className="bg-purple-950/30 border border-purple-900/40 rounded-2xl p-4 space-y-2">
+                  <div className="text-[11px] font-mono font-bold text-purple-300 flex items-center gap-1.5">
+                    <Rocket className="w-3.5 h-3.5 text-purple-400" /> Scientific Instruments & Payload
+                  </div>
+                  <p className="text-purple-100/90 leading-relaxed">{craft.primaryInstrument}</p>
+                </div>
+              ) : planet ? (
                 <>
                   <div className="bg-purple-950/30 border border-purple-900/40 rounded-2xl p-4 space-y-1.5">
                     <div className="text-[11px] font-mono font-bold text-purple-300">
@@ -261,7 +320,7 @@ export function InfoPanel({
           {/* TAB 4: FUN FACTS / TRIVIA */}
           {activeTab === 'facts' && (
             <div className="space-y-2.5">
-              {(planet ? planet.funFacts : deepSpace?.facts || []).map((fact, idx) => (
+              {(planet ? planet.funFacts : craft ? craft.facts : deepSpace?.facts || []).map((fact, idx) => (
                 <div
                   key={idx}
                   className="flex items-start gap-3 p-3.5 rounded-xl bg-purple-950/30 border border-purple-900/40"

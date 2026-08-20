@@ -1,4 +1,4 @@
-export type CelestialType = 'star' | 'planet' | 'dwarf' | 'moon' | 'space-object';
+export type CelestialType = 'star' | 'planet' | 'dwarf' | 'moon' | 'space-object' | 'spacecraft';
 export type DeepSpaceType = 'black-hole' | 'pulsar' | 'nebula' | 'wormhole' | 'comet';
 
 export interface RingConfig {
@@ -83,6 +83,23 @@ export interface DeepSpaceObject {
   facts: string[];
 }
 
+export interface SpacecraftData {
+  id: string;
+  name: string;
+  category: string;
+  tagline: string;
+  launchYear: string;
+  status: string;
+  speed: string;
+  distance: string;
+  primaryInstrument: string;
+  trajectoryColor: string;
+  position: [number, number, number];
+  scale: number;
+  overview: string;
+  facts: string[];
+}
+
 export interface ThemeConfig {
   id: string;
   name: string;
@@ -113,6 +130,8 @@ export interface CosmicToggles {
   distantGalaxies: boolean;
   asteroidBelt: boolean;
   atmospheres: boolean;
+  habitableZone: boolean;
+  spacecraft: boolean;
 }
 
 export interface ExplorerSettings {

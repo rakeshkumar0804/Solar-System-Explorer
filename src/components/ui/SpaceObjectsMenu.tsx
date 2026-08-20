@@ -8,6 +8,8 @@ import {
   CircleDot,
   Orbit,
   Compass,
+  Rocket,
+  Sun,
   X,
   Check,
 } from 'lucide-react';
@@ -31,6 +33,22 @@ interface PhenomenonItem {
 }
 
 const PHENOMENA: PhenomenonItem[] = [
+  {
+    key: 'habitableZone',
+    label: 'Habitable Zone',
+    category: 'Goldilocks Liquid Water Band',
+    icon: Sun,
+    iconColor: '#10b981',
+    iconBg: 'rgba(16, 185, 129, 0.15)',
+  },
+  {
+    key: 'spacecraft',
+    label: 'Historic Spacecraft',
+    category: 'Voyager 1, JWST, Parker Probe',
+    icon: Rocket,
+    iconColor: '#f59e0b',
+    iconBg: 'rgba(245, 158, 11, 0.15)',
+  },
   {
     key: 'milkyWayCore',
     label: 'Milky Way Core',
