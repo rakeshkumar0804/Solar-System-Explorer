@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Scene } from './components/3d/Scene';
 import { Navbar } from './components/ui/Navbar';
 import { ControlPanel } from './components/ui/ControlPanel';
@@ -10,6 +10,8 @@ import { DEEP_SPACE_OBJECTS } from './data/spaceObjectsData';
 import { THEMES, THEME_KEYS } from './data/themes';
 import type { ExplorerSettings } from './types/space';
 import { spaceAudio } from './utils/audio';
+
+const TOUR_LANDMARKS = ['sun', 'earth', 'saturn', 'black-hole', 'milky-way', 'andromeda-galaxy'];
 
 function App() {
   const [settings, setSettings] = useState<ExplorerSettings>({
@@ -44,6 +46,11 @@ function App() {
   const [compareA, setCompareA] = useState('earth');
   const [compareB, setCompareB] = useState('mars');
 
+  // Automated Cosmic Tour State
+  const [isTourActive, setIsTourActive] = useState(false);
+  const tourIndexRef = useRef(0);
+  const tourTimerRef = useRef<number | null>(null);
+
   const activeTheme = THEMES[settings.activeThemeId] || THEMES['cosmic-purple'];
 
   const selectedItem = settings.selectedBodyId
@@ -65,6 +72,11 @@ function App() {
   }, []);
 
   const handleResetCamera = useCallback(() => {
+    setIsTourActive(false);
+    if (tourTimerRef.current) {
+      clearInterval(tourTimerRef.current);
+      tourTimerRef.current = null;
+    }
     setSettings((prev) => ({ ...prev, selectedBodyId: null }));
     spaceAudio.playHoverSound();
   }, []);
@@ -81,6 +93,34 @@ function App() {
     setCompareB(planetId);
     setIsCompareOpen(true);
     spaceAudio.playSelectSound();
+  }, []);
+
+  // Automated Cosmic Tour Step Controller
+  const handleToggleTour = useCallback(() => {
+    if (isTourActive) {
+      setIsTourActive(false);
+      if (tourTimerRef.current) {
+        clearInterval(tourTimerRef.current);
+        tourTimerRef.current = null;
+      }
+    } else {
+      setIsTourActive(true);
+      tourIndexRef.current = 0;
+      handleSelectObject(TOUR_LANDMARKS[0]);
+
+      if (tourTimerRef.current) clearInterval(tourTimerRef.current);
+      tourTimerRef.current = window.setInterval(() => {
+        tourIndexRef.current = (tourIndexRef.current + 1) % TOUR_LANDMARKS.length;
+        handleSelectObject(TOUR_LANDMARKS[tourIndexRef.current]);
+      }, 7000);
+    }
+  }, [isTourActive, handleSelectObject]);
+
+  // Clean up tour timer on unmount
+  useEffect(() => {
+    return () => {
+      if (tourTimerRef.current) clearInterval(tourTimerRef.current);
+    };
   }, []);
 
   // Keyboard Shortcuts Hook
@@ -184,14 +224,16 @@ function App() {
         onSelect={handleSelectObject}
       />
 
-      {/* 2. Top Header with Compare Button */}
+      {/* 2. Top Navigation & Control Suite */}
       <Navbar
         planets={ALL_CELESTIAL_BODIES}
         deepSpaceObjects={DEEP_SPACE_OBJECTS}
         theme={activeTheme}
         soundEnabled={settings.soundEnabled}
+        isTourActive={isTourActive}
         onToggleSound={handleToggleSound}
         onSelectObject={handleSelectObject}
+        onToggleTour={handleToggleTour}
         onOpenCompare={() => setIsCompareOpen(true)}
       />
 

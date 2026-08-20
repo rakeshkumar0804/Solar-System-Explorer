@@ -1,4 +1,14 @@
-import { Volume2, VolumeX, X, Scale } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+  Eye,
+  Rocket,
+  Scale,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  Minimize2,
+  Sparkles,
+} from 'lucide-react';
 import type { CelestialBody, DeepSpaceObject, ThemeConfig } from '../../types/space';
 
 interface NavbarProps {
@@ -6,19 +16,41 @@ interface NavbarProps {
   deepSpaceObjects: DeepSpaceObject[];
   theme: ThemeConfig;
   soundEnabled: boolean;
+  isTourActive?: boolean;
   onToggleSound: () => void;
   onSelectObject: (id: string | null) => void;
+  onToggleTour?: () => void;
   onOpenCompare?: () => void;
 }
 
 export function Navbar({
   soundEnabled,
+  isTourActive = false,
   onToggleSound,
   onSelectObject,
+  onToggleTour,
   onOpenCompare,
 }: NavbarProps) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
+
   return (
-    <header className="absolute top-0 left-0 right-0 z-30 flex items-start justify-between p-6 pointer-events-none select-none">
+    <header className="absolute top-0 left-0 right-0 z-30 flex items-start justify-between p-4 sm:p-6 pointer-events-none select-none">
       {/* Top Left Header */}
       <div className="pointer-events-auto space-y-0.5">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-300 via-purple-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(168,85,247,0.4)]">
@@ -29,38 +61,83 @@ export function Navbar({
         </p>
       </div>
 
-      {/* Top Right Controls with Proper Gap and Spacing */}
-      <div className="pointer-events-auto flex items-center gap-3 pr-2">
-        {onOpenCompare && (
+      {/* Top Right Navigation & Utility Suite */}
+      <div className="pointer-events-auto flex items-center gap-2 sm:gap-2.5">
+        {/* 1. Navigation Pill Group */}
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-[#0c061a]/80 backdrop-blur-md p-1 rounded-full border border-purple-900/40 shadow-xl">
+          {/* Overview Button */}
           <button
-            onClick={onOpenCompare}
-            className="h-9 px-3.5 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-900/60 to-purple-950/70 hover:from-purple-800/80 hover:to-purple-900/80 border border-purple-600/40 text-purple-200 hover:text-white transition-all shadow-lg text-xs font-bold cursor-pointer backdrop-blur-md"
-            title="Compare Celestial Bodies"
+            onClick={() => onSelectObject(null)}
+            className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+            title="Reset to Isometric Solar Overview"
           >
-            <Scale className="w-3.5 h-3.5 text-purple-300 shrink-0" />
-            <span className="hidden sm:inline">Compare</span>
+            <Eye className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+            <span className="hidden md:inline">Overview</span>
           </button>
-        )}
 
-        <button
-          onClick={onToggleSound}
-          className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all cursor-pointer ${
-            soundEnabled
-              ? 'bg-purple-500/20 text-purple-200 border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
-              : 'bg-black/40 text-slate-400 border-white/10 hover:text-white hover:bg-black/60'
-          }`}
-          title={soundEnabled ? 'Mute Audio' : 'Enable Audio'}
-        >
-          {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-        </button>
+          {/* Cosmic Tour Button */}
+          {onToggleTour && (
+            <button
+              onClick={onToggleTour}
+              className={`h-8 px-3 rounded-full flex items-center gap-1.5 border transition-all text-xs font-semibold cursor-pointer ${
+                isTourActive
+                  ? 'bg-gradient-to-r from-amber-500/30 to-purple-600/40 border-amber-400/80 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.4)] animate-pulse'
+                  : 'bg-purple-950/40 hover:bg-purple-900/60 border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white'
+              }`}
+              title={isTourActive ? 'Stop Cosmic Tour' : 'Start Automated Cosmic Tour'}
+            >
+              {isTourActive ? (
+                <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0 animate-spin" />
+              ) : (
+                <Rocket className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+              )}
+              <span className="hidden md:inline">
+                {isTourActive ? 'Touring...' : 'Cosmic Tour'}
+              </span>
+            </button>
+          )}
 
-        <button
-          onClick={() => onSelectObject(null)}
-          className="w-9 h-9 rounded-full flex items-center justify-center bg-black/40 hover:bg-black/70 border border-white/10 hover:border-purple-400/50 text-slate-300 hover:text-white transition-all shadow-lg cursor-pointer"
-          title="Reset View"
-        >
-          <X className="w-4 h-4" />
-        </button>
+          {/* Compare Button */}
+          {onOpenCompare && (
+            <button
+              onClick={onOpenCompare}
+              className="h-8 px-3 rounded-full flex items-center gap-1.5 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 hover:border-purple-500/60 text-purple-200 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+              title="Compare Celestial Bodies"
+            >
+              <Scale className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+              <span className="hidden md:inline">Compare</span>
+            </button>
+          )}
+        </div>
+
+        {/* 2. Utility Controls Group (Audio & Fullscreen) */}
+        <div className="flex items-center gap-1.5 bg-[#0c061a]/80 backdrop-blur-md p-1 rounded-full border border-purple-900/40 shadow-xl">
+          {/* Mute Audio Toggle */}
+          <button
+            onClick={onToggleSound}
+            className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all cursor-pointer ${
+              soundEnabled
+                ? 'bg-purple-500/20 text-purple-200 border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
+                : 'bg-transparent text-slate-400 border-transparent hover:text-white hover:bg-purple-900/30'
+            }`}
+            title={soundEnabled ? 'Mute Audio' : 'Enable Space Audio'}
+          >
+            {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+          </button>
+
+          {/* Fullscreen Toggle */}
+          <button
+            onClick={toggleFullscreen}
+            className="w-8 h-8 rounded-full flex items-center justify-center bg-transparent hover:bg-purple-900/30 text-slate-300 hover:text-white transition-all cursor-pointer"
+            title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+          >
+            {isFullscreen ? (
+              <Minimize2 className="w-3.5 h-3.5" />
+            ) : (
+              <Maximize2 className="w-3.5 h-3.5" />
+            )}
+          </button>
+        </div>
       </div>
     </header>
   );
