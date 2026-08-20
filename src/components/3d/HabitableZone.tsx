@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import { Sparkles } from 'lucide-react';
+import { useHoverCursor } from '../../utils/useHoverCursor';
 
 interface HabitableZoneProps {
   innerRadius?: number;
@@ -12,6 +13,8 @@ export function HabitableZone({
   innerRadius = 21.5,
   outerRadius = 28.5,
 }: HabitableZoneProps) {
+  const { hoverProps } = useHoverCursor();
+
   const innerPoints = useMemo(() => {
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i <= 64; i++) {
@@ -32,8 +35,12 @@ export function HabitableZone({
 
   return (
     <group position={[0, -0.05, 0]}>
-      {/* 1. Volumetric Luminous Habitable Ring */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+      {/* 1. Volumetric Luminous Habitable Ring with Hover Pointer */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        {...hoverProps}
+        onClick={(e) => e.stopPropagation()}
+      >
         <ringGeometry args={[innerRadius, outerRadius, 64]} />
         <meshBasicMaterial
           color="#10b981"

@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useHoverCursor } from '../../utils/useHoverCursor';
 
 interface AsteroidBeltProps {
   count?: number;
@@ -9,6 +10,7 @@ interface AsteroidBeltProps {
 
 export function AsteroidBelt({ count = 600, timeSpeed }: AsteroidBeltProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
+  const { hoverProps } = useHoverCursor();
 
   const asteroids = useMemo(() => {
     const data = [];
@@ -71,18 +73,37 @@ export function AsteroidBelt({ count = 600, timeSpeed }: AsteroidBeltProps) {
   });
 
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[undefined, undefined, count]}
-      castShadow
-      receiveShadow
-    >
-      <dodecahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial
-        color="#78716c"
-        roughness={0.9}
-        metalness={0.2}
-      />
-    </instancedMesh>
+    <group>
+      <instancedMesh
+        ref={meshRef}
+        args={[undefined, undefined, count]}
+        castShadow
+        receiveShadow
+        {...hoverProps}
+      >
+        <dodecahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial
+          color="#78716c"
+          roughness={0.9}
+          metalness={0.2}
+        />
+      </instancedMesh>
+
+      {/* Invisible Hover Ring for Asteroid Belt */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0, 0]}
+        {...hoverProps}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ringGeometry args={[44.0, 53.0, 64]} />
+        <meshBasicMaterial
+          visible={false}
+          transparent
+          opacity={0}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
   );
 }
