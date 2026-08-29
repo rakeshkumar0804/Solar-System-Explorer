@@ -1,6 +1,4 @@
-<div align="center">
-
-# ?? Interactive Solar System Explorer
+# Interactive Solar System Explorer
 
 An immersive, high-performance 3D space exploration application built with **React 19**, **Three.js / React Three Fiber**, **TypeScript**, and **Tailwind CSS v4**. Explore our solar system, study planetary telemetry, compare celestial scales, and journey into deep-space cosmic phenomena.
 
@@ -13,22 +11,20 @@ An immersive, high-performance 3D space exploration application built with **Rea
 
 ---
 
-### ?? [**Launch Live Demo**](https://solar-system-explorer-rakesh.vercel.app) ? ?? [**Watch Cosmic Tour**](https://solar-system-explorer-rakesh.vercel.app) ? ?? [**Compare Celestial Bodies**](https://solar-system-explorer-rakesh.vercel.app)
-
-</div>
+### [Launch Live Demo](https://solar-system-explorer-rakesh.vercel.app) &bull; [Watch Cosmic Tour](https://solar-system-explorer-rakesh.vercel.app) &bull; [Compare Celestial Bodies](https://solar-system-explorer-rakesh.vercel.app)
 
 ---
 
-## ? Key Features
+## Key Features
 
-### ?? 1. Accurate 3D Celestial Physics & Geometry
-- **True 3D Spheres & Shader Materials**: Smooth physical materials with bump mapping, atmospheric luminescence, axial tilts, and real-time orbital rotations.
-- **Sun Corona & Core**: Luminous emissive core surrounded by a soft volumetric solar halo with multi-layered point lighting.
-- **Saturn & Uranus Rings**: Semi-transparent double-sided ring geometries with alpha particle maps.
+### 1. Accurate 3D Celestial Physics and Geometry
+- **True 3D Spheres and Physical Materials**: Physical materials with bump mapping, atmospheric luminescence, axial tilts, and real-time orbital rotations.
+- **Sun Corona and Core**: Luminous emissive core surrounded by a soft volumetric solar halo with multi-layered point lighting.
+- **Saturn and Uranus Rings**: Semi-transparent double-sided ring geometries with alpha particle maps.
 - **Planetary Moons**: Orbiting satellite systems including Earth's Moon, Galilean satellites, and Titan.
 - **Instanced Asteroid Belt**: 650+ unique procedural asteroids rotating within the Mars-Jupiter orbital gap.
 
-### ?? 2. Deep-Space Objects & Astrophysical Phenomena
+### 2. Deep-Space Objects and Astrophysical Phenomena
 Explore 9 outer deep-space landmarks positioned across the perimeter:
 1. **Supermassive Black Hole ("Gargantua")**: Relativistic accretion disk with photon sphere and event horizon void.
 2. **Einstein-Rosen Bridge (Wormhole)**: Four-dimensional spacetime funnel with iridescent particle distortion.
@@ -40,7 +36,7 @@ Explore 9 outer deep-space landmarks positioned across the perimeter:
 8. **NGC 1365 (Great Barred Spiral Galaxy)**: Prominent central stellar bar with active galactic nucleus.
 9. **Milky Way Core**: Spiral center housing Sagittarius A*.
 
-### ?? 3. Dedicated Celestial Comparison Suite
+### 3. Dedicated Celestial Comparison Suite
 - **Dual-Selector Interface**: Compare any two celestial bodies side-by-side (Sun, 8 Planets, Pluto, and Moon).
 - **Proportional Visual Scale Preview**: Dynamic visual bubbles maintaining exact equatorial diameter ratios with color tints and ring accents.
 - **Side-by-Side Telemetry Matrix**: Compares Classification, Mass, Diameter, Surface Gravity, Surface Temperature, Distance from Sun, Rotation Period (Day), Orbital Period (Year), Moons Count, and Atmospheric Composition.
@@ -50,60 +46,56 @@ Explore 9 outer deep-space landmarks positioned across the perimeter:
   - `Jupiter vs. Saturn (Gas Giants)`
   - `Sun vs. Jupiter (Star Scale)`
 
-### ?? 4. Circumstellar Goldilocks Habitable Zone
-- Luminous emerald/cyan translucent volumetric band spanning the scaled liquid water zone (0.95 ? 1.37 AU).
-- Complete with dashed boundary limit rings and minimal non-intrusive 3D telemetry badge.
+### 4. Circumstellar Goldilocks Habitable Zone
+- Luminous emerald/cyan translucent volumetric band spanning the scaled liquid water zone (0.95 - 1.37 AU).
+- Complete with dashed boundary limit rings and minimal 3D telemetry badge.
 
-### ?? 5. Automated Cinematic Cosmic Tour & Overview Reset
-- **Cosmic Tour**: Automated cinematic fly-through stepping through key landmarks (`Sun` ? `Earth` ? `Saturn` ? `Black Hole` ? `Milky Way` ? `Andromeda Galaxy`) with smooth camera interpolation.
-- **One-Click Overview**: Instantly glides back to the default wide-angle isometric bird's-eye perspective (`[0, 75, 125]` ? `[0, 0, 0]`).
+### 5. Automated Cinematic Cosmic Tour and Overview Reset
+- **Cosmic Tour**: Automated cinematic fly-through stepping through key landmarks (`Sun` -> `Earth` -> `Saturn` -> `Black Hole` -> `Milky Way` -> `Andromeda Galaxy`) with smooth camera interpolation.
+- **One-Click Overview**: Instantly glides back to the default wide-angle isometric bird's-eye perspective (`[0, 75, 125]` -> `[0, 0, 0]`).
 
-### ?? 6. Single Source-of-Truth Raycaster Cursor Engine
+### 6. Single Source-of-Truth Raycaster Cursor Engine
 - Default canvas cursor displays a standard arrow/grab cursor across empty space.
 - Raycaster automatically activates the interactive **Hand Pointer** (`pointer`) whenever hovering over any planet, the Sun, moons, deep-space phenomena, or planetary orbit ring ribbons.
 
-### ?? 7. Glassmorphic UI & Celestial Themes
+### 7. Glassmorphic UI and Celestial Themes
 - **Time Speed Control**: Granular slider from `-0.5x` (subtle rewind) to `+10.0x` (forward speed) with double-click reset.
-- **4 Space Theme Presets**:
-  - ?? *Cosmic Purple*
-  - ?? *Deep Space Blue*
-  - ?? *Emerald Nebula*
-  - ?? *Solar Flare Amber*
-- **Rich Telemetry Drawer**: 4 dedicated tabs per body (*Overview*, *Telemetry*, *Science / Geology*, *Facts & Trivia*).
+- **4 Space Theme Presets**: Cosmic Purple, Deep Space Blue, Emerald Nebula, and Solar Flare Amber.
+- **Rich Telemetry Drawer**: 4 dedicated tabs per body (*Overview*, *Telemetry*, *Science / Geology*, *Facts and Trivia*).
 - **Ambient Space Audio**: Procedural atmospheric audio synthesizer with mute toggle.
 
 ---
 
-## ?? Keyboard Shortcuts
+## Keyboard Shortcuts
 
 | Key | Action |
 |---|---|
-| <kbd>Space</kbd> | Toggle Time Progression / Pause |
-| <kbd>Esc</kbd> | Reset View / Close Telemetry Drawer / Exit Compare |
-| <kbd>C</kbd> | Toggle Celestial Body Comparison Modal |
-| <kbd>0</kbd> | Focus on **The Sun** |
-| <kbd>1</kbd> ? <kbd>8</kbd> | Focus on Planets (**Mercury** through **Neptune**) |
-| <kbd>9</kbd> | Focus on **Pluto** |
-| <kbd>O</kbd> | Toggle Planetary Orbit Lines |
-| <kbd>L</kbd> | Toggle 3D Labels & Badges |
-| <kbd>T</kbd> | Cycle Space Theme Presets |
-| <kbd>M</kbd> | Toggle Ambient Audio |
+| `Space` | Toggle Time Progression / Pause |
+| `Esc` | Reset View / Close Telemetry Drawer / Exit Compare |
+| `C` | Toggle Celestial Body Comparison Modal |
+| `0` | Focus on **The Sun** |
+| `1` - `8` | Focus on Planets (**Mercury** through **Neptune**) |
+| `9` | Focus on **Pluto** |
+| `O` | Toggle Planetary Orbit Lines |
+| `L` | Toggle 3D Labels and Badges |
+| `T` | Cycle Space Theme Presets |
+| `M` | Toggle Ambient Audio |
 
 ---
 
-## ??? Tech Stack & Architecture
+## Tech Stack and Architecture
 
 - **Core Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **3D Graphics & WebGL**: [Three.js](https://threejs.org/) + [@react-three/fiber](https://github.com/pmndrs/react-three-fiber) + [@react-three/drei](https://github.com/pmndrs/drei)
-- **Camera Controls**: Drei native `<CameraControls />` (Kinematic damping & zero matrix corruption)
-- **Styling & UI**: [Tailwind CSS v4](https://tailwindcss.com/) + Glassmorphic Backdrop Filters
+- **3D Graphics and WebGL**: [Three.js](https://threejs.org/) + [@react-three/fiber](https://github.com/pmndrs/react-three-fiber) + [@react-three/drei](https://github.com/pmndrs/drei)
+- **Camera Controls**: Drei native `<CameraControls />` (Kinematic damping and zero matrix corruption)
+- **Styling and UI**: [Tailwind CSS v4](https://tailwindcss.com/) + Glassmorphic Backdrop Filters
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Build Tool**: [Vite 8](https://vitejs.dev/)
 - **Deployment**: [Vercel](https://vercel.com/)
 
 ---
 
-## ?? Getting Started Locally
+## Getting Started Locally
 
 ### Prerequisites
 - Node.js (v18.0.0 or higher recommended)
@@ -140,7 +132,7 @@ Explore 9 outer deep-space landmarks positioned across the perimeter:
 
 ---
 
-## ?? Project Structure
+## Project Structure
 
 ```
 Solar-System-Explorer/
@@ -149,7 +141,7 @@ Solar-System-Explorer/
 ?   ??? components/
 ?   ?   ??? 3d/
 ?   ?   ?   ??? AsteroidBelt.tsx      # Procedural instanced asteroid field
-?   ?   ?   ??? CameraController.tsx  # Smooth CameraControls & focus target engine
+?   ?   ?   ??? CameraController.tsx  # Smooth CameraControls and focus target engine
 ?   ?   ?   ??? CursorManager.tsx     # Centralized Raycaster hover cursor detector
 ?   ?   ?   ??? HabitableZone.tsx     # Volumetric Goldilocks habitable band
 ?   ?   ?   ??? OrbitTrail.tsx        # Graphic orbit circles with hover ribbons
@@ -158,11 +150,11 @@ Solar-System-Explorer/
 ?   ?   ?   ??? SpaceObjects.tsx      # 9 deep space objects with custom visuals
 ?   ?   ?   ??? Sun.tsx               # Glowing core Sun with volumetric halo
 ?   ?   ??? ui/
-?   ?       ??? CompareModal.tsx      # Dual-selector comparison modal & scale ratio
+?   ?       ??? CompareModal.tsx      # Dual-selector comparison modal and scale ratio
 ?   ?       ??? ControlPanel.tsx      # Bottom-left glassmorphic control dock
 ?   ?       ??? ControlsOverlay.tsx   # Bottom-right navigation legend
 ?   ?       ??? InfoPanel.tsx         # Slide-out 4-tab astrophysical telemetry drawer
-?   ?       ??? Navbar.tsx            # Top header, Overview, Cosmic Tour, & Fullscreen
+?   ?       ??? Navbar.tsx            # Top header, Overview, Cosmic Tour, and Fullscreen
 ?   ?       ??? SpaceObjectsMenu.tsx  # Cosmic phenomena toggle switches
 ?   ??? data/
 ?   ?   ??? planetsData.ts            # Solar system celestial bodies dataset
@@ -172,10 +164,10 @@ Solar-System-Explorer/
 ?   ?   ??? space.ts                  # TypeScript interfaces and data contracts
 ?   ??? utils/
 ?   ?   ??? audio.ts                  # Procedural space audio synthesizer
-?   ?   ??? proceduralTextures.ts     # Procedural canvas textures & color maps
+?   ?   ??? proceduralTextures.ts     # Procedural canvas textures and color maps
 ?   ?   ??? useHoverCursor.ts         # Cursor helper utilities
-?   ??? App.tsx                       # Root state management & tour controller
-?   ??? index.css                     # Tailwind CSS v4 imports & cursor rules
+?   ??? App.tsx                       # Root state management and tour controller
+?   ??? index.css                     # Tailwind CSS v4 imports and cursor rules
 ?   ??? main.tsx                      # Application entry point
 ??? package.json
 ??? tsconfig.json
@@ -185,12 +177,6 @@ Solar-System-Explorer/
 
 ---
 
-## ?? License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
-
----
-
-<div align="center">
-  <sub>Built with ?? by Rakesh Kumar. Exploring the cosmos through interactive 3D WebGL.</sub>
-</div>
