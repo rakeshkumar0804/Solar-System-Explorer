@@ -2,16 +2,11 @@
 
 An immersive, high-performance 3D space exploration application built with **React 19**, **Three.js / React Three Fiber**, **TypeScript**, and **Tailwind CSS v4**. Explore our solar system, study planetary telemetry, compare celestial scales, and journey into deep-space cosmic phenomena.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Deployment-7928CA?style=for-the-badge&logo=vercel&logoColor=white)](https://solar-system-explorer-rakesh.vercel.app)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rakeshkumar0804/Solar-System-Explorer)
 [![React](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Vite](https://img.shields.io/badge/Vite%208-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS%20v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-
----
-
-### [Launch Live Demo](https://solar-system-explorer-rakesh.vercel.app) &bull; [Watch Cosmic Tour](https://solar-system-explorer-rakesh.vercel.app) &bull; [Compare Celestial Bodies](https://solar-system-explorer-rakesh.vercel.app)
 
 ---
 
@@ -91,7 +86,6 @@ Explore 9 outer deep-space landmarks positioned across the perimeter:
 - **Styling and UI**: [Tailwind CSS v4](https://tailwindcss.com/) + Glassmorphic Backdrop Filters
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Build Tool**: [Vite 8](https://vitejs.dev/)
-- **Deployment**: [Vercel](https://vercel.com/)
 
 ---
 
@@ -134,45 +128,45 @@ Explore 9 outer deep-space landmarks positioned across the perimeter:
 
 ## Project Structure
 
-```
+```text
 Solar-System-Explorer/
-??? public/                     # Static assets
-??? src/
-?   ??? components/
-?   ?   ??? 3d/
-?   ?   ?   ??? AsteroidBelt.tsx      # Procedural instanced asteroid field
-?   ?   ?   ??? CameraController.tsx  # Smooth CameraControls and focus target engine
-?   ?   ?   ??? CursorManager.tsx     # Centralized Raycaster hover cursor detector
-?   ?   ?   ??? HabitableZone.tsx     # Volumetric Goldilocks habitable band
-?   ?   ?   ??? OrbitTrail.tsx        # Graphic orbit circles with hover ribbons
-?   ?   ?   ??? Planet.tsx            # 3D planet spheres, rings, moons, and labels
-?   ?   ?   ??? Scene.tsx             # Primary Three.js canvas scene hierarchy
-?   ?   ?   ??? SpaceObjects.tsx      # 9 deep space objects with custom visuals
-?   ?   ?   ??? Sun.tsx               # Glowing core Sun with volumetric halo
-?   ?   ??? ui/
-?   ?       ??? CompareModal.tsx      # Dual-selector comparison modal and scale ratio
-?   ?       ??? ControlPanel.tsx      # Bottom-left glassmorphic control dock
-?   ?       ??? ControlsOverlay.tsx   # Bottom-right navigation legend
-?   ?       ??? InfoPanel.tsx         # Slide-out 4-tab astrophysical telemetry drawer
-?   ?       ??? Navbar.tsx            # Top header, Overview, Cosmic Tour, and Fullscreen
-?   ?       ??? SpaceObjectsMenu.tsx  # Cosmic phenomena toggle switches
-?   ??? data/
-?   ?   ??? planetsData.ts            # Solar system celestial bodies dataset
-?   ?   ??? spaceObjects.ts           # 9 deep-space objects telemetry dataset
-?   ?   ??? themes.ts                 # 4 cosmic color theme configurations
-?   ??? types/
-?   ?   ??? space.ts                  # TypeScript interfaces and data contracts
-?   ??? utils/
-?   ?   ??? audio.ts                  # Procedural space audio synthesizer
-?   ?   ??? proceduralTextures.ts     # Procedural canvas textures and color maps
-?   ?   ??? useHoverCursor.ts         # Cursor helper utilities
-?   ??? App.tsx                       # Root state management and tour controller
-?   ??? index.css                     # Tailwind CSS v4 imports and cursor rules
-?   ??? main.tsx                      # Application entry point
-??? package.json
-??? tsconfig.json
-??? vite.config.ts
-??? README.md
+|-- public/
+|-- src/
+|   |-- components/
+|   |   |-- 3d/
+|   |   |   |-- AsteroidBelt.tsx      # Procedural instanced asteroid field
+|   |   |   |-- CameraController.tsx  # Smooth CameraControls and focus target engine
+|   |   |   |-- CursorManager.tsx     # Centralized Raycaster hover cursor detector
+|   |   |   |-- HabitableZone.tsx     # Volumetric Goldilocks habitable band
+|   |   |   |-- OrbitTrail.tsx        # Graphic orbit circles with hover ribbons
+|   |   |   |-- Planet.tsx            # 3D planet spheres, rings, moons, and labels
+|   |   |   |-- Scene.tsx             # Primary Three.js canvas scene hierarchy
+|   |   |   |-- SpaceObjects.tsx      # 9 deep space objects with custom visuals
+|   |   |   +-- Sun.tsx               # Glowing core Sun with volumetric halo
+|   |   +-- ui/
+|   |       |-- CompareModal.tsx      # Dual-selector comparison modal and scale ratio
+|   |       |-- ControlPanel.tsx      # Bottom-left glassmorphic control dock
+|   |       |-- ControlsOverlay.tsx   # Bottom-right navigation legend
+|   |       |-- InfoPanel.tsx         # Slide-out 4-tab astrophysical telemetry drawer
+|   |       |-- Navbar.tsx            # Top header, Overview, Cosmic Tour, and Fullscreen
+|   |       +-- SpaceObjectsMenu.tsx  # Cosmic phenomena toggle switches
+|   |-- data/
+|   |   |-- planetsData.ts            # Solar system celestial bodies dataset
+|   |   |-- spaceObjects.ts           # 9 deep-space objects telemetry dataset
+|   |   +-- themes.ts                 # 4 cosmic color theme configurations
+|   |-- types/
+|   |   +-- space.ts                  # TypeScript interfaces and data contracts
+|   |-- utils/
+|   |   |-- audio.ts                  # Procedural space audio synthesizer
+|   |   |-- proceduralTextures.ts     # Procedural canvas textures and color maps
+|   |   +-- useHoverCursor.ts         # Cursor helper utilities
+|   |-- App.tsx                       # Root state management and tour controller
+|   |-- index.css                     # Tailwind CSS v4 imports and cursor rules
+|   +-- main.tsx                      # Application entry point
+|-- package.json
+|-- tsconfig.json
+|-- vite.config.ts
++-- README.md
 ```
 
 ---
