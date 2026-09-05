@@ -1,20 +1,27 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CosmicCanvas, type BootPhase } from './CosmicCanvas';
-import { BootHUD } from './BootHUD';
+import { BootHUD, type DiagnosticEntry } from './BootHUD';
+import type { WebGLStatus } from '../../types/space';
 
 interface BootScreenProps {
+  webglStatus: WebGLStatus;
   isSceneReady: boolean;
   onComplete: () => void;
   isReplay?: boolean;
 }
 
-export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootScreenProps) {
+export function BootScreen({
+  webglStatus,
+  isSceneReady,
+  onComplete,
+  isReplay = false,
+}: BootScreenProps) {
   const [phase, setPhase] = useState<BootPhase>('wakeup');
   const [phaseProgress, setPhaseProgress] = useState(0);
   const [totalElapsed, setTotalElapsed] = useState(0);
   const [statusText, setStatusText] = useState('INITIALIZING NAVIGATION CORE');
   const [stageIndex, setStageIndex] = useState(0);
-  const [diagnostics, setDiagnostics] = useState<string[]>([]);
+  const [diagnostics, setDiagnostics] = useState<DiagnosticEntry[]>([]);
   const [isWaitingForScene, setIsWaitingForScene] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -50,21 +57,21 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
 
   // Handle Skip Intro
   const handleSkip = useCallback(() => {
-    if (isSceneReady) {
+    if (isSceneReady || webglStatus === 'unsupported') {
       handleFinish();
     } else {
       setIsWaitingForScene(true);
       setStatusText('PREPARING 3D ENVIRONMENT');
       setStageIndex(3);
     }
-  }, [isSceneReady, handleFinish]);
+  }, [isSceneReady, webglStatus, handleFinish]);
 
-  // If waiting for scene and scene becomes ready, finish cleanly
+  // If waiting for scene and scene becomes ready (or unsupported), finish cleanly
   useEffect(() => {
-    if (isWaitingForScene && isSceneReady) {
+    if (isWaitingForScene && (isSceneReady || webglStatus === 'unsupported')) {
       handleFinish();
     }
-  }, [isWaitingForScene, isSceneReady, handleFinish]);
+  }, [isWaitingForScene, isSceneReady, webglStatus, handleFinish]);
 
   // Main 9.5 - 10.5s NASA Intelligent Space Navigation Startup Timeline
   useEffect(() => {
@@ -89,13 +96,19 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
         setPhaseProgress(p2Progress);
 
         // Sequential diagnostic log accumulation
-        const logs: string[] = [];
-        if (elapsed >= 2.2) logs.push('Rendering engine detected');
-        if (elapsed >= 2.9) logs.push('Celestial database loaded');
-        if (elapsed >= 3.6) logs.push('Orbital coordinates synchronized');
-        if (elapsed >= 4.2) logs.push('Interaction controls registered');
+        const logs: DiagnosticEntry[] = [];
+        if (elapsed >= 2.2) logs.push({ text: 'Rendering engine detected' });
+        if (elapsed >= 2.9) logs.push({ text: 'Celestial database loaded' });
+        if (elapsed >= 3.6) logs.push({ text: 'Orbital coordinates synchronized' });
+        if (elapsed >= 4.2) logs.push({ text: 'Interaction controls registered' });
         if (elapsed >= 4.8) {
-          logs.push(isSceneReady ? 'WebGL context stable' : 'WebGL pipeline verifying');
+          if (webglStatus === 'supported') {
+            logs.push({ text: 'WebGL context stable' });
+          } else if (webglStatus === 'unsupported') {
+            logs.push({ text: 'WebGL context unavailable', isError: true });
+          } else {
+            logs.push({ text: 'WebGL pipeline verifying...' });
+          }
         }
         setDiagnostics(logs);
 
@@ -112,13 +125,21 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
         setPhase('construction');
         const p3Progress = (elapsed - 5.0) / 3.0;
         setPhaseProgress(p3Progress);
-        setDiagnostics([
-          'Rendering engine detected',
-          'Celestial database loaded',
-          'Orbital coordinates synchronized',
-          'Interaction controls registered',
-          'WebGL context stable',
-        ]);
+
+        const standardLogs: DiagnosticEntry[] = [
+          { text: 'Rendering engine detected' },
+          { text: 'Celestial database loaded' },
+          { text: 'Orbital coordinates synchronized' },
+          { text: 'Interaction controls registered' },
+        ];
+        if (webglStatus === 'supported') {
+          standardLogs.push({ text: 'WebGL context stable' });
+        } else if (webglStatus === 'unsupported') {
+          standardLogs.push({ text: 'WebGL context unavailable', isError: true });
+        } else {
+          standardLogs.push({ text: 'WebGL pipeline verifying...' });
+        }
+        setDiagnostics(standardLogs);
 
         if (elapsed < 6.0) {
           setStatusText('MAPPING CELESTIAL OBJECTS');
@@ -135,14 +156,22 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
       else if (elapsed < 10.0) {
         setPhase('online');
         setPhaseProgress((elapsed - 8.0) / 2.0);
-        setStatusText('NAVIGATION SYSTEM ONLINE');
+        if (webglStatus === 'unsupported') {
+          setStatusText('LIMITED MODE READY');
+        } else {
+          setStatusText('NAVIGATION SYSTEM ONLINE');
+        }
         setStageIndex(3);
       }
       // Phase 5: 10.0s - 11.0s (Natural Handoff & Scene Transition)
       else if (elapsed < 11.0) {
         setPhase('handoff');
         setPhaseProgress((elapsed - 10.0) / 1.0);
-        setStatusText('HANDOFF TO INTERACTIVE EXPLORER');
+        if (webglStatus === 'unsupported') {
+          setStatusText('HANDOFF TO FALLBACK EXPLORER');
+        } else {
+          setStatusText('HANDOFF TO INTERACTIVE EXPLORER');
+        }
         setStageIndex(3);
       }
       // Finished Timeline
@@ -150,7 +179,7 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
         if (!hasFinishedTimelineRef.current) {
           hasFinishedTimelineRef.current = true;
           setPhase('ready');
-          if (isSceneReady) {
+          if (isSceneReady || webglStatus === 'unsupported') {
             handleFinish();
           } else {
             setIsWaitingForScene(true);
@@ -159,7 +188,8 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
         }
       }
 
-      if (!hasFinishedTimelineRef.current || !isSceneReady) {
+      const isReadyToProceed = isSceneReady || webglStatus === 'unsupported';
+      if (!hasFinishedTimelineRef.current || !isReadyToProceed) {
         animFrameRef.current = requestAnimationFrame(updateTimeline);
       }
     };
@@ -171,7 +201,7 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
         cancelAnimationFrame(animFrameRef.current);
       }
     };
-  }, [isSceneReady, handleFinish]);
+  }, [isSceneReady, webglStatus, handleFinish]);
 
   return (
     <div
@@ -194,6 +224,7 @@ export function BootScreen({ isSceneReady, onComplete, isReplay = false }: BootS
         stageIndex={stageIndex}
         diagnostics={diagnostics}
         totalElapsed={totalElapsed}
+        webglStatus={webglStatus}
         onSkip={handleSkip}
         isWaitingForScene={isWaitingForScene}
       />

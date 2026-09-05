@@ -119,7 +119,7 @@ export function calculateDiameterComparison(
     comparisonBadge = 'Equal Diameter (1.00\u00D7)';
   } else if (isALarger) {
     primaryStatement = `${bodyA.name} is ${ratioFormatted} as large in diameter as ${bodyB.name}`;
-    secondaryStatement = `${bodyA.name}?s diameter is ${percentFormatted} larger than ${bodyB.name}`;
+    secondaryStatement = `${bodyA.name}'s diameter is ${percentFormatted} larger than ${bodyB.name}`;
     comparisonBadge = `${ratioFormatted} Larger`;
   } else {
     // A is smaller than B

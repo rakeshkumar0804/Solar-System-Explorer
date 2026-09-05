@@ -9,8 +9,9 @@ import { BootScreen } from './components/boot/BootScreen';
 import { SUN_DATA, PLANETS_DATA, ALL_CELESTIAL_BODIES } from './data/planetsData';
 import { DEEP_SPACE_OBJECTS } from './data/spaceObjectsData';
 import { THEMES, THEME_KEYS } from './data/themes';
-import type { ExplorerSettings } from './types/space';
+import type { ExplorerSettings, WebGLStatus } from './types/space';
 import { spaceAudio } from './utils/audio';
+import { isWebGLSupported } from './utils/webgl';
 
 const TOUR_LANDMARKS = ['sun', 'earth', 'saturn', 'black-hole', 'milky-way', 'andromeda-galaxy'];
 
@@ -50,6 +51,16 @@ function App() {
   // Trigger state incremented each time the user clicks Overview / resets view
   const [resetTrigger, setResetTrigger] = useState(0);
 
+  // Shared WebGL Verification State
+  const [webglStatus, setWebglStatus] = useState<WebGLStatus>(() => {
+    if (typeof window === 'undefined') return 'checking';
+    return isWebGLSupported() ? 'checking' : 'unsupported';
+  });
+  const [webglError, setWebglError] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return isWebGLSupported() ? null : 'WebGL is disabled or unsupported by your graphics driver';
+  });
+
   // Cinematic Boot Screen States
   const [showBoot, setShowBoot] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -61,7 +72,6 @@ function App() {
   });
   const [isReplayBoot, setIsReplayBoot] = useState<boolean>(false);
   const [isSceneReady, setIsSceneReady] = useState<boolean>(false);
-  const [webglError, setWebglError] = useState<string | null>(null);
 
   // Automated Cosmic Tour State
   const [isTourActive, setIsTourActive] = useState(false);
@@ -120,6 +130,18 @@ function App() {
   const handleReplayIntro = useCallback(() => {
     setIsReplayBoot(true);
     setShowBoot(true);
+  }, []);
+
+  const handleRetryWebGL = useCallback(() => {
+    const supported = isWebGLSupported();
+    if (supported) {
+      setWebglStatus('checking');
+      setWebglError(null);
+      setIsSceneReady(false);
+    } else {
+      setWebglStatus('unsupported');
+      setWebglError('WebGL is disabled or unsupported by your graphics driver');
+    }
   }, []);
 
   // Automated Cosmic Tour Step Controller
@@ -240,7 +262,8 @@ function App() {
       {/* 1. Cinematic Boot Screen (Active during initial launch / replay) */}
       {showBoot && (
         <BootScreen
-          isSceneReady={isSceneReady || !!webglError}
+          webglStatus={webglStatus}
+          isSceneReady={isSceneReady}
           isReplay={isReplayBoot}
           onComplete={() => {
             setShowBoot(false);
@@ -249,25 +272,34 @@ function App() {
         />
       )}
 
-      {/* 2. Primary 3D WebGL Canvas Scene (Loads in parallel behind boot overlay) */}
-      <Scene
-        sunData={SUN_DATA}
-        planets={PLANETS_DATA}
-        deepSpaceObjects={DEEP_SPACE_OBJECTS}
-        theme={activeTheme}
-        timeSpeed={settings.timeSpeed}
-        showOrbits={settings.showOrbits}
-        showLabels={settings.showLabels}
-        cosmicToggles={settings.cosmicToggles}
-        selectedId={settings.selectedBodyId}
-        resetTrigger={resetTrigger}
-        onSelect={handleSelectObject}
-        onSceneReady={() => setIsSceneReady(true)}
-        onWebGLFailure={(reason) => {
-          setWebglError(reason);
-          setIsSceneReady(true);
-        }}
-      />
+      {/* 2. Primary 3D WebGL Canvas Scene / Fallback (inert when boot is active) */}
+      <div className="w-full h-full absolute inset-0" aria-hidden={showBoot}>
+        <Scene
+          sunData={SUN_DATA}
+          planets={PLANETS_DATA}
+          deepSpaceObjects={DEEP_SPACE_OBJECTS}
+          theme={activeTheme}
+          timeSpeed={settings.timeSpeed}
+          showOrbits={settings.showOrbits}
+          showLabels={settings.showLabels}
+          cosmicToggles={settings.cosmicToggles}
+          selectedId={settings.selectedBodyId}
+          resetTrigger={resetTrigger}
+          webglStatus={webglStatus}
+          webglError={webglError}
+          onSelect={handleSelectObject}
+          onSceneReady={() => {
+            setWebglStatus('supported');
+            setIsSceneReady(true);
+          }}
+          onWebGLFailure={(reason) => {
+            setWebglStatus('unsupported');
+            setWebglError(reason);
+            setIsSceneReady(false);
+          }}
+          onRetryWebGL={handleRetryWebGL}
+        />
+      </div>
 
       {/* 3. Top Navigation & Control Suite */}
       <Navbar

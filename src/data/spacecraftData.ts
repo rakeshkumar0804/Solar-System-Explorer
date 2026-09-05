@@ -15,7 +15,7 @@ export const SPACECRAFT_DATA: SpacecraftData[] = [
     position: [95, 42, -90],
     scale: 1.2,
     overview:
-      'Launched in 1977, Voyager 1 completed historic flybys of Jupiter and Saturn before utilizing gravitational assists to swing northward above the ecliptic plane. In August 2012, it crossed the heliopause into interstellar space, becoming humanity?s first interstellar envoy carrying the Golden Record.',
+      "Launched in 1977, Voyager 1 completed historic flybys of Jupiter and Saturn before utilizing gravitational assists to swing northward above the ecliptic plane. In August 2012, it crossed the heliopause into interstellar space, becoming humanity's first interstellar envoy carrying the Golden Record.",
     facts: [
       'Carries the iconic Golden Record with sounds, greetings in 55 languages, and images of Earth.',
       'Operates on Plutonium-238 Radioisotope Thermoelectric Generators (RTGs) still producing power after 49+ years.',
@@ -30,7 +30,7 @@ export const SPACECRAFT_DATA: SpacecraftData[] = [
     tagline: 'Premier infrared space observatory orbiting the Sun-Earth L2 Lagrange Point',
     launchYear: 'December 25, 2021',
     status: 'Active Science Operations',
-    speed: 'Orbital velocity ~0.2?0.4 km/s in Halo Orbit',
+    speed: 'Orbital velocity ~0.2–0.4 km/s in Halo Orbit',
     distance: '1.5 Million km from Earth (Sun-Earth L2)',
     primaryInstrument: 'NIRCam, NIRSpec, MIRI, FGS/NIRISS (Beryllium Gold Mirror Array)',
     trajectoryColor: '#38bdf8',
@@ -39,7 +39,7 @@ export const SPACECRAFT_DATA: SpacecraftData[] = [
     overview:
       'JWST is the largest and most powerful space telescope ever constructed. Stationed in a halo orbit around the second Sun-Earth Lagrange point (L2), its 6.5-meter gold-coated beryllium primary mirror peers back over 13.5 billion years to observe the first stars and galaxies formed after the Big Bang.',
     facts: [
-      'Protected by a five-layer tennis-court-sized Kapton sunshield maintaining operating temperatures below -233?C (-388?F).',
+      'Protected by a five-layer tennis-court-sized Kapton sunshield maintaining operating temperatures below -233°C (-388°F).',
       'Can detect the heat signature of a bumblebee at the distance of the Moon.',
       'Features 18 hexagonal primary mirror segments made of ultra-lightweight beryllium coated in pure gold.',
       'Has discovered some of the earliest galaxies ever seen and analyzed the atmospheres of distant exoplanets.',
@@ -49,7 +49,7 @@ export const SPACECRAFT_DATA: SpacecraftData[] = [
     id: 'parker-solar-probe',
     name: 'Parker Solar Probe',
     category: 'SOLAR HELIOPHYSICS',
-    tagline: 'Humanity?s fastest spacecraft diving through the extreme solar corona',
+    tagline: "Humanity's fastest spacecraft diving through the extreme solar corona",
     launchYear: 'August 12, 2018',
     status: 'Active Solar Orbit Passes',
     speed: 'Up to 692,000 km/h (430,000 mph / 192 km/s)',
@@ -62,7 +62,7 @@ export const SPACECRAFT_DATA: SpacecraftData[] = [
       'The Parker Solar Probe is designed to "touch the Sun," flying closer to the solar surface than any spacecraft before. Utilizing multiple Venus gravity assists, it dives through the multi-million-degree corona to uncover how solar wind is accelerated and how the corona is heated.',
     facts: [
       'The fastest human-made object in history, reaching speeds of ~692,000 km/h (0.064% the speed of light).',
-      'Shielded by a 4.5-inch-thick carbon-composite heat shield that endures temperatures of 1,377?C (2,500?F) while instruments remain at room temperature (~29?C).',
+      'Shielded by a 4.5-inch-thick carbon-composite heat shield that endures temperatures of 1,377°C (2,500°F) while instruments remain at room temperature (~29°C).',
       'First NASA mission named after a living person: astrophysicist Eugene Parker who predicted the solar wind in 1958.',
       'Discovered that the solar magnetic field abruptly flips back on itself in phenomena called "switchbacks."',
     ],

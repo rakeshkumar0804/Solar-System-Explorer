@@ -76,8 +76,8 @@ export function ControlPanel({
             <span>TIME SPEED</span>
             <button
               onClick={resetSpeed}
-              title="Click to reset to 1.0?"
-              aria-label="Reset orbital speed to 1.0?"
+              title="Click to reset to 1.0×"
+              aria-label="Reset orbital speed to 1.0 times"
               className="text-xs font-mono text-purple-200 hover:text-white font-bold cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none rounded px-1"
             >
               {settings.timeSpeed.toFixed(1)}&times;

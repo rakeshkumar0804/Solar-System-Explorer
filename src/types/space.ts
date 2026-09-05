@@ -147,3 +147,6 @@ export interface ExplorerSettings {
   selectedBodyId: string | null;
   comparisonBodyId: string | null;
 }
+
+export type WebGLStatus = 'checking' | 'supported' | 'unsupported';
+

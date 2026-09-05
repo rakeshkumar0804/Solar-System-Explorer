@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useCallback, Component, type ReactN
 import { Canvas } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import type { CelestialBody, DeepSpaceObject, ThemeConfig, CosmicToggles } from '../../types/space';
+import type { CelestialBody, DeepSpaceObject, ThemeConfig, CosmicToggles, WebGLStatus } from '../../types/space';
 import { Sun } from './Sun';
 import { Planet } from './Planet';
 import { OrbitTrail } from './OrbitTrail';
@@ -69,9 +69,12 @@ interface SceneProps {
   cosmicToggles: CosmicToggles;
   selectedId: string | null;
   resetTrigger?: number;
+  webglStatus?: WebGLStatus;
+  webglError?: string | null;
   onSelect: (id: string | null) => void;
   onSceneReady?: () => void;
   onWebGLFailure?: (reason: string) => void;
+  onRetryWebGL?: () => void;
 }
 
 export function Scene({
@@ -85,20 +88,21 @@ export function Scene({
   cosmicToggles,
   selectedId,
   resetTrigger = 0,
+  webglStatus = 'checking',
+  webglError = null,
   onSelect,
   onSceneReady,
   onWebGLFailure,
+  onRetryWebGL,
 }: SceneProps) {
   const planetPositions = useRef(new Map<string, THREE.Vector3>());
   const interactiveGroupRef = useRef<THREE.Group>(null);
   const [retryKey, setRetryKey] = useState(0);
-  const [isSupported, setIsSupported] = useState<boolean>(true);
   const [contextLost, setContextLost] = useState<boolean>(false);
 
   // Check WebGL support on mount or retry
   useEffect(() => {
     const supported = isWebGLSupported();
-    setIsSupported(supported);
     setContextLost(false);
     if (!supported && onWebGLFailure) {
       onWebGLFailure('WebGL is disabled or unsupported by your graphics driver');
@@ -111,16 +115,18 @@ export function Scene({
 
   const handleRetry = useCallback(() => {
     setContextLost(false);
-    setIsSupported(true);
     setRetryKey((k) => k + 1);
-  }, []);
+    if (onRetryWebGL) {
+      onRetryWebGL();
+    }
+  }, [onRetryWebGL]);
 
-  if (!isSupported || contextLost) {
+  if (webglStatus === 'unsupported' || contextLost) {
     return (
       <WebGLFallback
         theme={theme}
         onRetry={handleRetry}
-        reason={contextLost ? 'WebGL context was lost' : 'WebGL is disabled or unsupported by your graphics driver'}
+        reason={contextLost ? 'WebGL context was lost' : (webglError || 'WebGL is disabled or unsupported by your graphics driver')}
       />
     );
   }
