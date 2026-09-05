@@ -5,6 +5,7 @@ import { ControlPanel } from './components/ui/ControlPanel';
 import { InfoPanel } from './components/ui/InfoPanel';
 import { ControlsOverlay } from './components/ui/ControlsOverlay';
 import { CompareModal } from './components/ui/CompareModal';
+import { BootScreen } from './components/boot/BootScreen';
 import { SUN_DATA, PLANETS_DATA, ALL_CELESTIAL_BODIES } from './data/planetsData';
 import { DEEP_SPACE_OBJECTS } from './data/spaceObjectsData';
 import { THEMES, THEME_KEYS } from './data/themes';
@@ -48,6 +49,19 @@ function App() {
 
   // Trigger state incremented each time the user clicks Overview / resets view
   const [resetTrigger, setResetTrigger] = useState(0);
+
+  // Cinematic Boot Screen States
+  const [showBoot, setShowBoot] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return !sessionStorage.getItem('hasSeenCosmicBoot');
+    } catch {
+      return true;
+    }
+  });
+  const [isReplayBoot, setIsReplayBoot] = useState<boolean>(false);
+  const [isSceneReady, setIsSceneReady] = useState<boolean>(false);
+  const [webglError, setWebglError] = useState<string | null>(null);
 
   // Automated Cosmic Tour State
   const [isTourActive, setIsTourActive] = useState(false);
@@ -101,6 +115,11 @@ function App() {
     setCompareB(planetId);
     setIsCompareOpen(true);
     spaceAudio.playSelectSound();
+  }, []);
+
+  const handleReplayIntro = useCallback(() => {
+    setIsReplayBoot(true);
+    setShowBoot(true);
   }, []);
 
   // Automated Cosmic Tour Step Controller
@@ -218,7 +237,19 @@ function App() {
 
   return (
     <main className="w-screen h-screen relative overflow-hidden bg-[#05010d] text-slate-100 select-none">
-      {/* 1. Primary 3D WebGL Canvas Scene */}
+      {/* 1. Cinematic Boot Screen (Active during initial launch / replay) */}
+      {showBoot && (
+        <BootScreen
+          isSceneReady={isSceneReady || !!webglError}
+          isReplay={isReplayBoot}
+          onComplete={() => {
+            setShowBoot(false);
+            setIsReplayBoot(false);
+          }}
+        />
+      )}
+
+      {/* 2. Primary 3D WebGL Canvas Scene (Loads in parallel behind boot overlay) */}
       <Scene
         sunData={SUN_DATA}
         planets={PLANETS_DATA}
@@ -231,9 +262,14 @@ function App() {
         selectedId={settings.selectedBodyId}
         resetTrigger={resetTrigger}
         onSelect={handleSelectObject}
+        onSceneReady={() => setIsSceneReady(true)}
+        onWebGLFailure={(reason) => {
+          setWebglError(reason);
+          setIsSceneReady(true);
+        }}
       />
 
-      {/* 2. Top Navigation & Control Suite */}
+      {/* 3. Top Navigation & Control Suite */}
       <Navbar
         planets={ALL_CELESTIAL_BODIES}
         deepSpaceObjects={DEEP_SPACE_OBJECTS}
@@ -247,15 +283,17 @@ function App() {
         onOpenCompare={() => setIsCompareOpen(true)}
       />
 
-      {/* 3. Floating Control Dock (Bottom Left) */}
+      {/* 4. Persistent Floating Control Dock (Bottom Left) */}
       <ControlPanel
         settings={settings}
         theme={activeTheme}
+        isVisible={!showBoot}
         onUpdateSettings={setSettings}
         onResetCamera={handleResetOverview}
+        onReplayIntro={handleReplayIntro}
       />
 
-      {/* 4. Telemetry & Info Drawer */}
+      {/* 5. Telemetry & Info Drawer */}
       <InfoPanel
         selectedItem={selectedItem}
         theme={activeTheme}
@@ -264,7 +302,7 @@ function App() {
         onNextPlanet={handleNextPlanet}
       />
 
-      {/* 5. Dedicated Glassmorphic Dual Comparison Modal */}
+      {/* 6. Dedicated Glassmorphic Dual Comparison Modal */}
       {isCompareOpen && (
         <CompareModal
           initialTargetA={compareA}
@@ -274,8 +312,11 @@ function App() {
         />
       )}
 
-      {/* 6. Viewport Shortcuts HUD Legend (Bottom Right) */}
-      <ControlsOverlay theme={activeTheme} />
+      {/* 7. Persistent Navigation Guide & Legend (Bottom Right) */}
+      <ControlsOverlay
+        theme={activeTheme}
+        isVisible={!showBoot}
+      />
     </main>
   );
 }
