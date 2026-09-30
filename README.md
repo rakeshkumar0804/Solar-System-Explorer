@@ -1,176 +1,112 @@
-# Interactive Solar System Explorer
+# Solar System Explorer — local rebuild
 
-An immersive, high-performance 3D space exploration application built with **React 19**, **Three.js / React Three Fiber**, **TypeScript**, and **Tailwind CSS v4**. Explore our solar system, study planetary telemetry, compare celestial scales, and journey into deep-space cosmic phenomena.
+A solar-system explorer and an illustrated cosmic atlas for Rakesh Kumar, built with React, TypeScript, Three.js, React Three Fiber, and Vite.
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rakeshkumar0804/Solar-System-Explorer)
-[![React](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-[![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
-[![Vite](https://img.shields.io/badge/Vite%208-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS%20v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+The opening view features Earth and the Moon. Planet surfaces use locally bundled imagery, with directional sunlight, a day/night Earth material, city lights, ocean highlights, clouds, a thin atmosphere, and Saturn ring shadows. A quieter dark interface keeps the selected world prominent.
 
----
+## Run locally
 
-## Key Features
+Use **Node.js 24.15 or later in the 24.x line**. Node 22.22.2 or later in the 22.x line is also supported. Older Node 18/20 instructions from the original README do not apply to this dependency set.
 
-### 1. Accurate 3D Celestial Physics and Geometry
-- **True 3D Spheres and Physical Materials**: Physical materials with bump mapping, atmospheric luminescence, axial tilts, and real-time orbital rotations.
-- **Sun Corona and Core**: Luminous emissive core surrounded by a soft volumetric solar halo with multi-layered point lighting.
-- **Saturn and Uranus Rings**: Semi-transparent double-sided ring geometries with alpha particle maps.
-- **Planetary Moons**: Orbiting satellite systems including Earth's Moon, Galilean satellites, and Titan.
-- **Instanced Asteroid Belt**: 650+ unique procedural asteroids rotating within the Mars-Jupiter orbital gap.
+For a fresh installation from the complete rebuild ZIP, open a terminal in the folder containing `package.json`, then run:
 
-### 2. Deep-Space Objects and Astrophysical Phenomena
-Explore 9 outer deep-space landmarks positioned across the perimeter:
-1. **Supermassive Black Hole ("Gargantua")**: Relativistic accretion disk with photon sphere and event horizon void.
-2. **Einstein-Rosen Bridge (Wormhole)**: Four-dimensional spacetime funnel with iridescent particle distortion.
-3. **Vela Pulsar**: Rotating neutron star emitting twin relativistic magnetic beam flares.
-4. **Halley's Comet**: Icy nucleus with active glowing dust and plasma tail.
-5. **Stellar Nebula**: Volumetric molecular cloud of ionized hydrogen nursery particles.
-6. **Globular Star Cluster**: Spherical cluster of tightly gravitationally bound ancient stars.
-7. **Andromeda Galaxy (M31)**: Giant spiral galaxy spanning ~1 trillion stars.
-8. **NGC 1365 (Great Barred Spiral Galaxy)**: Prominent central stellar bar with active galactic nucleus.
-9. **Milky Way Core**: Spiral center housing Sagittarius A*.
-
-### 3. Dedicated Celestial Comparison Suite
-- **Dual-Selector Interface**: Compare any two celestial bodies side-by-side (Sun, 8 Planets, Pluto, and Moon).
-- **Proportional Visual Scale Preview**: Dynamic visual bubbles maintaining exact equatorial diameter ratios with color tints and ring accents.
-- **Side-by-Side Telemetry Matrix**: Compares Classification, Mass, Diameter, Surface Gravity, Surface Temperature, Distance from Sun, Rotation Period (Day), Orbital Period (Year), Moons Count, and Atmospheric Composition.
-- **One-Click Presets**:
-  - `Earth vs. Mars`
-  - `Earth vs. Venus (Twin Planet)`
-  - `Jupiter vs. Saturn (Gas Giants)`
-  - `Sun vs. Jupiter (Star Scale)`
-
-### 4. Circumstellar Goldilocks Habitable Zone
-- Luminous emerald/cyan translucent volumetric band spanning the scaled liquid water zone (0.95 - 1.37 AU).
-- Complete with dashed boundary limit rings and minimal 3D telemetry badge.
-
-### 5. Automated Cinematic Cosmic Tour and Overview Reset
-- **Cosmic Tour**: Automated cinematic fly-through stepping through key landmarks (`Sun` -> `Earth` -> `Saturn` -> `Black Hole` -> `Milky Way` -> `Andromeda Galaxy`) with smooth camera interpolation.
-- **One-Click Overview**: Instantly glides back to the default wide-angle isometric bird's-eye perspective (`[0, 75, 125]` -> `[0, 0, 0]`).
-
-### 6. Single Source-of-Truth Raycaster Cursor Engine
-- Default canvas cursor displays a standard arrow/grab cursor across empty space.
-- Raycaster automatically activates the interactive **Hand Pointer** (`pointer`) whenever hovering over any planet, the Sun, moons, deep-space phenomena, or planetary orbit ring ribbons.
-
-### 7. Glassmorphic UI and Celestial Themes
-- **Time Speed Control**: Granular slider from `-0.5x` (subtle rewind) to `+10.0x` (forward speed) with double-click reset.
-- **4 Space Theme Presets**: Cosmic Purple, Deep Space Blue, Emerald Nebula, and Solar Flare Amber.
-- **Rich Telemetry Drawer**: 4 dedicated tabs per body (*Overview*, *Telemetry*, *Science / Geology*, *Facts and Trivia*).
-- **Ambient Space Audio**: Procedural atmospheric audio synthesizer with mute toggle.
-
----
-
-## Keyboard Shortcuts
-
-| Key | Action |
-|---|---|
-| `Space` | Toggle Time Progression / Pause |
-| `Esc` | Reset View / Close Telemetry Drawer / Exit Compare |
-| `C` | Toggle Celestial Body Comparison Modal |
-| `0` | Focus on **The Sun** |
-| `1` - `8` | Focus on Planets (**Mercury** through **Neptune**) |
-| `9` | Focus on **Pluto** |
-| `O` | Toggle Planetary Orbit Lines |
-| `L` | Toggle 3D Labels and Badges |
-| `T` | Cycle Space Theme Presets |
-| `M` | Toggle Ambient Audio |
-
----
-
-## Tech Stack and Architecture
-
-- **Core Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **3D Graphics and WebGL**: [Three.js](https://threejs.org/) + [@react-three/fiber](https://github.com/pmndrs/react-three-fiber) + [@react-three/drei](https://github.com/pmndrs/drei)
-- **Camera Controls**: Drei native `<CameraControls />` (Kinematic damping and zero matrix corruption)
-- **Styling and UI**: [Tailwind CSS v4](https://tailwindcss.com/) + Glassmorphic Backdrop Filters
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Build Tool**: [Vite 8](https://vitejs.dev/)
-
----
-
-## Getting Started Locally
-
-### Prerequisites
-- Node.js (v18.0.0 or higher recommended)
-- npm, yarn, or pnpm
-
-### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/rakeshkumar0804/Solar-System-Explorer.git
-   cd Solar-System-Explorer
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:5173/](http://localhost:5173/) in your browser.
-
-4. **Build for production**:
-   ```bash
-   npm run build
-   ```
-
-5. **Preview production build**:
-   ```bash
-   npm run preview
-   ```
-
----
-
-## Project Structure
-
-```text
-Solar-System-Explorer/
-|-- public/
-|-- src/
-|   |-- components/
-|   |   |-- 3d/
-|   |   |   |-- AsteroidBelt.tsx      # Procedural instanced asteroid field
-|   |   |   |-- CameraController.tsx  # Smooth CameraControls and focus target engine
-|   |   |   |-- CursorManager.tsx     # Centralized Raycaster hover cursor detector
-|   |   |   |-- HabitableZone.tsx     # Volumetric Goldilocks habitable band
-|   |   |   |-- OrbitTrail.tsx        # Graphic orbit circles with hover ribbons
-|   |   |   |-- Planet.tsx            # 3D planet spheres, rings, moons, and labels
-|   |   |   |-- Scene.tsx             # Primary Three.js canvas scene hierarchy
-|   |   |   |-- SpaceObjects.tsx      # 9 deep space objects with custom visuals
-|   |   |   +-- Sun.tsx               # Glowing core Sun with volumetric halo
-|   |   +-- ui/
-|   |       |-- CompareModal.tsx      # Dual-selector comparison modal and scale ratio
-|   |       |-- ControlPanel.tsx      # Bottom-left glassmorphic control dock
-|   |       |-- ControlsOverlay.tsx   # Bottom-right navigation legend
-|   |       |-- InfoPanel.tsx         # Slide-out 4-tab astrophysical telemetry drawer
-|   |       |-- Navbar.tsx            # Top header, Overview, Cosmic Tour, and Fullscreen
-|   |       +-- SpaceObjectsMenu.tsx  # Cosmic phenomena toggle switches
-|   |-- data/
-|   |   |-- planetsData.ts            # Solar system celestial bodies dataset
-|   |   |-- spaceObjects.ts           # 9 deep-space objects telemetry dataset
-|   |   +-- themes.ts                 # 4 cosmic color theme configurations
-|   |-- types/
-|   |   +-- space.ts                  # TypeScript interfaces and data contracts
-|   |-- utils/
-|   |   |-- audio.ts                  # Procedural space audio synthesizer
-|   |   |-- proceduralTextures.ts     # Procedural canvas textures and color maps
-|   |   +-- useHoverCursor.ts         # Cursor helper utilities
-|   |-- App.tsx                       # Root state management and tour controller
-|   |-- index.css                     # Tailwind CSS v4 imports and cursor rules
-|   +-- main.tsx                      # Application entry point
-|-- package.json
-|-- tsconfig.json
-|-- vite.config.ts
-+-- README.md
+```bash
+npm ci
+npm run dev
 ```
 
----
+Open **http://127.0.0.1:5173/**. Dependency installation needs an internet connection; planetary textures are bundled and served locally. Stop the server with Ctrl+C.
 
-## License
+If you already have the working rebuild and are applying `Solar-Explorer-Cosmic-Atlas-Update.zip`, follow **UPDATE-INSTRUCTIONS.md**. Merge that patch into your existing project, then run `npm run dev`; this update adds no dependencies.
 
-This project is open source and available under the [MIT License](LICENSE).
+If port 5173 is already occupied, stop the other server or use `npm run dev -- --port 5174`. Both dev and preview servers bind to the local loopback address.
+
+For the production build and local preview:
+
+```bash
+npm run build
+npm run preview
+```
+
+The production preview runs at **http://127.0.0.1:4173/**. These commands do not deploy, commit, or push anything.
+
+## Included experience
+
+- Close views of the Sun, eight planets, Pluto, and the Moon; drag to orbit and scroll or pinch to zoom.
+- A compressed solar-system overview with selectable planets, labels, and orbit paths.
+- Earth with day/night shading, night lights, cloud shading, normal detail, ocean reflections, and atmospheric glow in Balanced/High quality.
+- Saturn’s textured rings, including the planet’s shadow on its rings and the rings’ shadow on the planet in Balanced/High quality.
+- Comparison selectors and presets, including a consistent Earth–Moon comparison. Circle diameters use the data’s actual diameter ratios.
+- Pause/resume, animation speed, a timed guided tour, optional ambient audio, and fullscreen where supported.
+- Three quality levels, atmosphere/cloud controls, reduced-motion support, keyboard controls, and a clearly labelled static fallback if WebGL 2 cannot start.
+
+The overview’s sizes, orbital distances, positions, and timing are illustrative. Earth–Moon separation in the close view is also compressed. This is an educational visual explorer, not an ephemeris or physical simulation. Maps include enhanced colours and reconstructed regions; Pluto is a grayscale mosaic with incomplete coverage.
+
+## Deep Space
+
+Choose **Deep space** in the top navigation, then **All destinations** to browse or search eleven destinations:
+
+- **Milky Way:** a layered spiral-galaxy model with representative stars, a dust layer, and an approximate Solar System marker.
+- **Black hole:** an illustrative non-rotating black hole, a luminous accretion disk, and approximate light bending. Orbit it to inspect the distorted disk from different angles.
+- **Messier 13:** a spherical star-cluster model inspired by the Hercules Cluster.
+- **Orion Nebula:** a volume of illuminated gas, dark dust, and representative young stars.
+- **Pulsar:** a neutron star with a slowly rotating tilted magnetic field and illustrated radiation beams.
+- **Crab Nebula:** a supernova-remnant model combining a glowing volume and a shell of filaments.
+- **Andromeda:** a broad stellar disk, central bulge, and approximate dust lanes.
+- **TRAPPIST-1:** seven labelled planets moving around an ultracool dwarf, with imagined surfaces and compressed spacing.
+- **Comet:** a rough nucleus, coma, straight ion tail, and curved dust tail.
+- **Solar frontiers:** a separate schematic of the asteroid belt and Kuiper Belt, with planetary landmarks.
+- **Wormhole:** a clearly labelled hypothetical embedding diagram. It does not represent an observed object or an established traversable portal.
+
+Each destination includes field notes, model limitations, and a NASA source. These scenes are illustrations, not measured star maps or research-grade physics simulations. They introduce no third-party image assets or new npm dependencies.
+
+The atlas groups destinations into Galaxies & gravity, Life of stars, Worlds & frontiers, and Theoretical. Search and category filters work together. The destination strip scrolls horizontally; previous/next controls also cycle through the collection.
+
+The chapter loads on entry and mounts one renderer at a time. Returning restores the selected planet/overview, animation speed, pause state, and display settings. The solar tour stops and optional ambient audio is muted when entering Deep Space. Camera orientation and illustrative animation phase reset when a scene is remounted.
+
+Deep Space supports three camera perspectives, zoom/reset, pause, quality controls, and reduced-motion preferences. Space pauses motion, left/right arrows change destinations, and R resets the camera. The atlas, field notes, and help pause the scene while open. Black-hole and volume views cap render resolution and shader iterations to bound work on large or high-DPI screens. Pulsar rotation is slowed and uses no rapid flashing.
+
+See **DEEP_SPACE_REVIEW.md** for expansion verification and remaining browser checks.
+
+## Keyboard controls
+
+| Key | Action |
+| --- | --- |
+| Space | Pause or resume animation |
+| Left / right arrow | Previous or next world |
+| 1–8 | Mercury through Neptune |
+| 0 / 9 | Sun / Pluto |
+| C | Open comparison |
+| O | Open system overview |
+| Escape | Close a dialog or settings; stop the tour |
+
+Form fields and buttons keep their native keyboard behavior. The Moon is available in the destination bar and through the next/previous controls.
+
+## Checks and review
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+See **LOCAL_REVIEW.md** for the original solar rebuild and **DEEP_SPACE_REVIEW.md** for the current atlas results and remaining localhost checks. The images in `verification/` are standalone shader/material checks, not browser screenshots or proof of the full interface layout.
+
+## Source layout
+
+- `src/App.tsx`: chapter navigation and lazy-loading boundary.
+- `src/explorer/SolarExplorer.tsx`: preserved solar-system interface, state, playback, settings, and fallback UI.
+- `src/explorer/deep/`: Deep Space interface, scenes, shaders, representative star distributions, and camera/quality budgets.
+- `src/explorer/SolarScene.tsx`: lazy-loaded scene, camera controls, stars, and system overview.
+- `src/explorer/Planet.tsx` and `shaders.ts`: planet geometry and materials.
+- `src/explorer/Dialogs.tsx`: comparison, details, and credits.
+- `src/explorer/catalog.ts` and `math.ts`: presentation data, Moon data, scales, and animation helpers.
+- `src/explorer/explorer.css`: responsive interface styling.
+- `public/textures/`: locally served planet imagery and thumbnails.
+- `src/explorer/__tests__/`: behavior and numerical checks.
+
+The previous `src/components/` implementation and legacy deep-space object sources are retained for reference, but are not mounted by the new application. The current atlas is implemented in `src/explorer/deep/`. Existing reference planet data, comparison helpers, and ambient audio are reused.
+
+## Attribution
+
+See **ASSET-CREDITS.md** for the imagery sources, licences, and adaptations. Credits also appear inside the app under Sources & about. Third-party imagery has its own licensing terms; this rebuild does not assign a new licence to the project’s source code.

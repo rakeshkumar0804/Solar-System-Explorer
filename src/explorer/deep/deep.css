@@ -1,0 +1,100 @@
+.deep-space{position:relative;min-height:730px;height:100svh;overflow:hidden;background:#020407;color:#e6edf3;--deep-accent:#bacbdc}
+.deep-header{position:absolute;inset:0 0 auto;height:95px;padding:0 3.7%;display:flex;align-items:center;justify-content:space-between;z-index:20;border-bottom:1px solid #ffffff0c}
+.return-solar{display:flex;align-items:center;gap:12px;color:#a8b8c8;font-size:12px;padding:12px 0}
+.return-solar:hover{color:#fff}.return-solar svg{transition:transform .2s}.return-solar:hover svg{transform:translateX(-3px)}
+.deep-brand{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;font-size:13px;letter-spacing:4px;line-height:1.5}
+.deep-brand svg{color:#b9cad8}.deep-brand small{display:block;color:#788a9f;font-size:7px;letter-spacing:1.8px;margin-top:3px}
+.deep-scene{position:absolute;inset:96px 0 210px 24%;touch-action:none;z-index:1}
+.deep-scene canvas{display:block;cursor:grab}.deep-scene canvas:active{cursor:grabbing}
+.deep-introduction{position:absolute;left:3.7%;top:45%;transform:translateY(-50%);width:29%;max-width:380px;pointer-events:none;z-index:5}
+.deep-introduction .section-marker{font-size:9px;letter-spacing:1.4px;color:#91a2b6;margin-bottom:22px}
+.deep-introduction .section-marker>span{background:var(--deep-accent)}
+.deep-introduction h1{font-size:clamp(44px,5.1vw,78px);font-weight:350;letter-spacing:-2.6px;line-height:1.06;margin:0 0 19px;outline:none;max-width:350px}
+.deep-subtitle{font-size:17px;line-height:1.55;font-weight:350;color:#c4d0db;margin:0 0 19px;max-width:280px;letter-spacing:-.2px}
+.deep-description{font-size:12px;line-height:1.9;color:#8c9eb3;max-width:275px;margin:0 0 19px}
+.deep-read{pointer-events:auto;display:flex;align-items:center;gap:20px;font-size:12px;color:#d9e5ee;padding:7px 0}
+.deep-read:hover{color:var(--deep-accent)}.deep-read svg{transition:transform .2s}.deep-read:hover svg{transform:translateX(4px)}
+.deep-metrics{max-width:278px;margin:27px 0 0;border-top:1px solid #ffffff13;padding-top:7px}
+.deep-metrics>div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
+.deep-metrics dt{font-size:8px;letter-spacing:.8px;color:#8194aa;white-space:nowrap}
+.deep-metrics dd{font-size:12px;white-space:nowrap;color:#c4d0de;margin:0}
+.deep-view-label{position:absolute;top:122px;right:3.7%;display:flex;align-items:center;gap:9px;font-size:8px;letter-spacing:1.6px;color:#8a9db2;z-index:4;pointer-events:none}
+.deep-view-label .status-dot{background:var(--deep-accent)}
+.deep-camera{right:3.7%;top:39%;background:#0c11167a}
+.deep-scene-footer{position:absolute;left:35%;right:3.7%;bottom:202px;display:flex;align-items:center;justify-content:space-between;gap:15px;z-index:7}
+.deep-perspectives{display:flex;align-items:center;gap:15px;font-size:10px;white-space:nowrap;color:#7e91a6}
+.deep-perspectives svg{margin-right:2px}.deep-perspectives button{padding:8px 0;color:#8495a9;font-size:10px;border-bottom:1px solid transparent}.deep-perspectives button:hover{color:#d6e0eb}.deep-perspectives button[aria-pressed=true]{color:#cdd9e5;border-color:#a0b5c854}
+.deep-scale-note{font-size:9px;line-height:1.5;color:#6e8199;text-align:right;max-width:230px}
+.deep-dock{position:absolute;bottom:0;left:3.7%;right:3.7%;height:185px;z-index:10;background:#020407}
+.deep-dock-top{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #ffffff16;padding-top:15px;margin-bottom:16px;gap:10px}
+.deep-dock-top>.eyebrow{font-size:8px;letter-spacing:1.5px;color:#8092a6}
+.deep-playback{display:flex;align-items:center;gap:23px;font-size:10px;color:#97a9bc}
+.deep-playback>button{display:flex;align-items:center;gap:8px;padding:4px 0;min-width:61px}
+.deep-quality{display:flex;align-items:center;gap:9px;font-size:10px;color:#8297ae}.deep-quality select{background:transparent;border:0;padding:4px 2px;font-size:10px;color:#becddb}
+.deep-label-toggle{display:flex;align-items:center;gap:7px;font-size:10px;color:#92a6bb;cursor:pointer}.deep-label-toggle input{accent-color:#a9c6d7;width:12px;height:12px;margin:0}
+.deep-destinations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.deep-destination{display:flex;align-items:center;gap:18px;text-align:left;padding:15px 20px;height:90px;border:1px solid #ffffff10;border-radius:8px;background:#0b111650;transition:border-color .2s,background .2s}
+.deep-destination:hover{background:#111a2480;border-color:#ffffff24}.deep-destination.selected{background:linear-gradient(110deg,#15233290,#10172055);border-color:#a2bdcf45}
+.deep-destination-copy{display:flex;flex-direction:column;gap:8px}.deep-card-number{font-size:7px;letter-spacing:1.3px;color:#7188a0}
+.deep-destination strong{font-size:14px;letter-spacing:.1px;font-weight:400;color:#9cadbf}.deep-destination.selected strong{color:#e4edf5}
+.deep-destination>svg{margin-left:auto;color:#5e7892}.deep-destination.selected>svg{color:#c3d3e3}
+.deep-dock-bottom{display:flex;align-items:center;justify-content:space-between;height:37px;gap:10px;font-size:8px;color:#71839b}
+.deep-dock-bottom>span:first-child{display:flex;align-items:center;gap:8px}.deep-dock-bottom>span:nth-child(2){font-size:7px;letter-spacing:1.3px;color:#596d85}
+.deep-dock-bottom>div{display:none;gap:12px}.deep-dock-bottom>div>button{display:flex;padding:4px;color:#a9bdd1}
+.cosmic-art{width:58px;height:48px;display:block;position:relative;flex:none;overflow:hidden;border-radius:50%;background:radial-gradient(ellipse,#f9ead079,transparent 54%)}
+.art-milky-way{transform:rotate(-25deg) scaleY(.66);background:radial-gradient(ellipse,#fff1d6 0%,#dbc5a761 10%,#708da44a 30%,transparent 65%)}
+.art-milky-way:after{content:'';position:absolute;inset:5px;border:3px solid #b8d5e947;border-top-color:#8aaac47c;border-radius:50%;transform:rotate(-20deg)}
+.art-milky-way:before{content:'';position:absolute;inset:12px;border:3px solid #c4d8e67a;border-bottom-color:transparent;border-radius:50%}
+.art-black-hole{background:radial-gradient(ellipse,#000 0 24%,#ffd9a7 26%,#e99e556b 33%,transparent 55%);transform:rotate(-12deg)}
+.art-black-hole:after{content:'';position:absolute;top:22px;left:0;width:100%;height:4px;background:linear-gradient(90deg,transparent,#ffdc9cb0,#fff0d1,#f0b2719a,transparent);box-shadow:0 0 5px #f8b76b}
+.art-messier-13{background:radial-gradient(circle,#fff5e899,transparent 57%)}
+.art-messier-13:after{content:'';position:absolute;left:28px;top:22px;width:2px;height:2px;background:#f4eadc;border-radius:50%;box-shadow:-13px 1px #d3dfeb,12px 9px #b6cce3,9px -11px #dccebc,-8px -9px #d4dcea,4px 7px #c5d7eb,-3px 3px #fff,1px -10px #efe2c2,-17px -7px #63809c,18px -4px #83a1bc,-12px 13px #a2b8cc,2px 16px #748da6,5px -19px #91acc3,-21px 5px #afc0cf,22px 13px #b09d88,0 0 6px 2px #bacfe785}
+.cosmic-marker{display:flex;align-items:center;gap:10px;white-space:nowrap;color:#d5e9f4;font-size:8px;letter-spacing:1.1px;text-shadow:0 1px 6px #000;pointer-events:none}
+.cosmic-marker>i{display:block;width:5px;height:5px;border-radius:50%;background:#e2f2ff;box-shadow:0 0 0 4px #afdaf126,0 0 20px #9dcfec}
+.cosmic-marker>span{border-left:1px solid #bfd9ec50;padding-left:10px;line-height:1.6;background:#02040755}.cosmic-marker small{display:block;color:#8cabc0;font-size:7px;letter-spacing:.15px}
+.deep-unavailable{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center}.deep-unavailable>.cosmic-art{width:150px;height:120px;margin-bottom:25px}.deep-unavailable>p{max-width:290px;font-size:12px;line-height:1.8;color:#879db4;margin:0}.deep-unavailable>button{display:flex;align-items:center;gap:8px;color:#c5d8e8;font-size:12px;padding:10px}
+@media(min-width:1600px){.deep-introduction{left:5%;max-width:400px}.deep-description{font-size:14px;max-width:325px}.deep-subtitle{font-size:21px;max-width:320px}.deep-metrics{max-width:315px}.deep-header{padding-inline:5%}.deep-dock{left:5%;right:5%}.deep-introduction h1{max-width:400px}}
+@media(max-width:1100px){.deep-introduction{width:29%}.deep-introduction h1{font-size:49px}.deep-description{font-size:11px;max-width:245px}.deep-subtitle{font-size:15px;max-width:225px}.deep-metrics dt{font-size:7px;letter-spacing:.6px}.deep-metrics dd{font-size:11px}.deep-metrics{max-width:238px}.deep-scene{left:25%}.deep-destination{padding:13px;gap:12px}.deep-destination strong{font-size:12px}.deep-card-number{font-size:6px}.deep-destination .cosmic-art{width:45px}.deep-scale-note{max-width:160px;font-size:8px}.deep-perspectives{gap:11px}.deep-scene-footer{left:35%}}
+@media(max-height:760px) and (min-width:761px){.deep-space{min-height:665px}.deep-header{height:80px}.deep-scene{top:81px;bottom:183px}.deep-introduction{top:43%;transform:translateY(-50%)}.deep-introduction h1{font-size:49px;margin-bottom:13px}.deep-introduction .section-marker{margin-bottom:17px}.deep-subtitle{font-size:15px;margin-bottom:12px}.deep-description{font-size:11px;line-height:1.75;margin-bottom:13px}.deep-metrics{margin-top:18px}.deep-metrics>div{padding:9px 0}.deep-dock{height:165px}.deep-dock-top{padding-top:10px;margin-bottom:11px}.deep-destination{height:80px}.deep-scene-footer{bottom:175px}.deep-view-label{top:101px}}
+@media(max-width:760px){.deep-space{min-height:840px}.deep-header{height:80px;padding-inline:22px}.return-solar{gap:7px;font-size:10px}.return-solar svg{width:14px}.deep-brand{font-size:10px;letter-spacing:2.5px;gap:7px}.deep-brand small{font-size:5px;letter-spacing:1px}.deep-brand svg{width:14px}.deep-help{width:28px;height:28px}.deep-help svg{width:17px}.deep-scene{inset:105px 0 420px}.deep-view-label{top:97px;right:22px;font-size:7px;letter-spacing:1px}.deep-camera{top:209px;right:12px;padding:2px}.deep-camera .icon-button{width:27px;height:30px}.deep-introduction{left:23px;right:23px;bottom:242px;top:auto;transform:none;width:auto;max-width:none}.deep-introduction .section-marker{font-size:7px;margin-bottom:8px;letter-spacing:1px}.deep-introduction h1{font-size:36px;letter-spacing:-1.3px;max-width:none;margin-bottom:7px}.deep-subtitle{font-size:13px;max-width:none;margin-bottom:5px;line-height:1.5}.deep-description{display:none}.deep-read{font-size:10px;gap:10px;padding:7px 0}.deep-metrics{display:flex;align-items:flex-start;justify-content:space-between;max-width:none;margin:12px 0 0;padding-top:9px;gap:9px}.deep-metrics>div{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:3px 0}.deep-metrics dt{font-size:6px;letter-spacing:.55px}.deep-metrics dd{font-size:10px}.deep-scene-footer{left:23px;right:23px;bottom:202px}.deep-perspectives{gap:16px}.deep-perspectives button{font-size:9px;padding:7px 0}.deep-perspectives svg{width:11px}.deep-scale-note{display:none}.deep-dock{left:22px;right:22px;height:187px}.deep-dock-top{padding-top:13px;margin-bottom:13px}.deep-dock-top>.eyebrow{font-size:6px;letter-spacing:.7px;max-width:112px;line-height:1.7}.deep-playback{gap:12px}.deep-label-toggle{font-size:8px;gap:4px}.deep-label-toggle input{width:10px;height:10px}.deep-quality{gap:4px}.deep-quality>span{display:none}.deep-quality select{font-size:9px;max-width:72px}.deep-playback>button{min-width:14px}.deep-playback>button>span{display:none}.deep-destinations{display:flex;overflow-x:auto;gap:9px;scrollbar-width:thin;scrollbar-color:#304455 transparent;padding-bottom:4px;scroll-snap-type:x proximity}.deep-destination{min-width:184px;height:89px;scroll-snap-align:start;padding:13px 10px;gap:11px}.deep-destination .cosmic-art{width:43px;height:41px}.deep-destination strong{font-size:12px}.deep-card-number{font-size:6px;letter-spacing:.8px}.deep-destination>svg{width:12px}.deep-dock-bottom{height:30px;font-size:7px}.deep-dock-bottom>span:nth-child(2){display:none}.deep-dock-bottom>div{display:flex}.cosmic-marker{font-size:6px;gap:7px}.cosmic-marker small{font-size:6px}.deep-unavailable>p{font-size:10px;max-width:240px}.deep-unavailable>.cosmic-art{width:90px;height:80px;margin-bottom:10px}}
+@media(max-width:370px){.deep-header{padding-inline:16px}.deep-brand{left:55%}.return-solar{font-size:9px}.deep-introduction{left:19px;right:19px}.deep-metrics dd{font-size:9px}.deep-label-toggle{font-size:7px}.deep-playback{gap:8px}.deep-dock{left:18px;right:18px}}
+@media(max-height:900px) and (min-width:761px){.deep-description{display:none}}
+
+/* The larger atlas keeps one scene in view and one row of destinations. */
+.deep-browse{display:flex;align-items:center;gap:9px;color:#b7c9dc;font-size:10px;padding:3px 0;white-space:nowrap}
+.deep-browse:hover{color:#f1f7ff}.deep-count{display:grid;place-items:center;border:1px solid #a5bfd42e;border-radius:4px;color:#88a6c1;min-width:23px;height:19px;font-size:9px}
+.deep-destinations{display:flex;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:#304455 transparent;padding-bottom:4px}
+.deep-destination{flex:0 0 calc((100% - 28px)/3);min-width:235px;scroll-snap-align:start}
+.deep-destination-copy{min-width:0}.deep-card-number{line-height:1.45}.deep-destination strong{white-space:nowrap}
+.deep-dock-bottom>div{display:flex;align-items:center;gap:12px}.deep-dock-bottom>div>span{font-variant-numeric:tabular-nums;font-size:8px;letter-spacing:1px;color:#8198b0}
+.destination-wormhole .deep-view-label{color:#c9b5ed}.destination-solar-frontiers h1{font-size:clamp(44px,4.7vw,72px)}
+.cosmic-world-label,.cosmic-direction,.cosmic-region-label{display:block;white-space:nowrap;pointer-events:none;user-select:none;text-shadow:0 1px 5px #000,0 0 8px #000;background:#02040744;color:#b8c9d9;font-size:9px;letter-spacing:.5px;padding:2px 4px;border-radius:3px}
+.cosmic-direction,.cosmic-region-label{font-size:7px;letter-spacing:1.2px;color:#8eaac1}
+.art-orion-nebula{background:radial-gradient(ellipse at 38% 48%,#89e1efb0,transparent 32%),radial-gradient(ellipse at 65% 40%,#b54573aa,transparent 46%),radial-gradient(ellipse at 42% 67%,#de8c81bb,transparent 48%);filter:blur(1px)}
+.art-pulsar{background:radial-gradient(circle,#effaff 0 6%,#7edbff8c 8%,transparent 43%);transform:rotate(-24deg)}
+.art-pulsar:before{content:'';position:absolute;inset:0 21px;background:linear-gradient(0deg,transparent,#3cb7e68a,transparent 44%,#9becffcc 50%,transparent 57%,#3cb7e68a,transparent);clip-path:polygon(0 0,100% 0,53% 50%,100% 100%,0 100%,47% 50%)}
+.art-pulsar:after{content:'';position:absolute;inset:12px 5px;border:1px solid #7ebdca55;border-radius:50%}
+.art-crab-nebula{background:radial-gradient(ellipse,#83cfd67c 0%,#6faeb733 26%,#cf755585 47%,transparent 65%)}
+.art-crab-nebula:after{content:'';position:absolute;inset:9px;border:2px dashed #ffb6857d;border-radius:43% 57% 47% 53%;transform:rotate(15deg)}
+.art-andromeda{background:radial-gradient(ellipse,#fff0d1 0%,#e5bd8177 13%,#b59b7166 35%,transparent 68%);transform:rotate(-30deg) scaleY(.5)}
+.art-andromeda:after{content:'';position:absolute;inset:8px;border:2px solid #030609b0;border-radius:50%}
+.art-trappist-1{background:radial-gradient(circle at 40% 52%,#ffdda7 0 10%,#dd5b2847 13%,transparent 40%)}
+.art-trappist-1:after{content:'';position:absolute;inset:8px 1px;border:1px solid #ba8d6966;border-radius:50%;transform:rotate(-20deg);box-shadow:0 0 0 5px #b58c6122}
+.art-comet{background:radial-gradient(circle at 24% 64%,#e3ffe9 0 4%,#83decb83 7%,transparent 22%)}
+.art-comet:after{content:'';position:absolute;inset:7px 2px 15px 9px;background:linear-gradient(110deg,#edeee178,#74c3eb47,transparent);clip-path:polygon(0 100%,84% 0,100% 24%);filter:blur(2px)}
+.art-solar-frontiers{background:radial-gradient(circle,#ffdfa0 0 4%,transparent 12%);transform:rotate(-20deg) scaleY(.68)}
+.art-solar-frontiers:after{content:'';position:absolute;inset:3px;border:3px dotted #88a9c960;border-radius:50%;box-shadow:inset 0 0 0 8px #ffffff04}
+.art-solar-frontiers:before{content:'';position:absolute;inset:13px;border:2px dotted #baa08080;border-radius:50%}
+.art-wormhole{background:linear-gradient(180deg,#80cfec66,transparent 43%,transparent 57%,#bd9cd566);clip-path:polygon(0 0,100% 0,58% 43%,58% 57%,100% 100%,0 100%,42% 57%,42% 43%);transform:rotate(20deg)}
+.atlas-search{display:flex;align-items:center;gap:12px;border:1px solid #839fbb2e;background:#050b12;border-radius:8px;padding:12px 15px;color:#7995af;margin:20px 0 15px}
+.atlas-search input{background:transparent;border:0;outline:none;color:#dfeaf3;font:inherit;font-size:13px;width:100%;min-width:0}.atlas-search:focus-within{border-color:#92b0ca99}.atlas-search input::placeholder{color:#6c8098}
+.atlas-filters{display:flex;flex-wrap:wrap;gap:7px}.atlas-filters button{font-size:10px;padding:8px 11px;border:1px solid #8cabc222;border-radius:5px;color:#90a5bb}.atlas-filters button[aria-pressed=true]{background:#a8cce512;border-color:#a8cce55c;color:#d6e7f6}
+.atlas-results{font-size:10px;color:#7992ab;margin:17px 0 12px;letter-spacing:.3px}
+.atlas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.atlas-card{display:flex;align-items:center;gap:13px;position:relative;min-height:125px;text-align:left;padding:17px 15px;border:1px solid #8babc51c;border-radius:8px;background:#060c146b;transition:background .2s,border-color .2s}
+.atlas-card:hover{background:#15233488;border-color:#9abbd55c}.atlas-card.selected{border-color:#9abbd560;background:#14233366}
+.atlas-card>.cosmic-art{width:58px;height:52px}.atlas-card-copy{display:flex;flex-direction:column;gap:8px;min-width:0}.atlas-card-copy>small{font-size:7px;letter-spacing:1px;color:#7f9bb5}.atlas-card-copy>strong{font-size:15px;font-weight:450;color:#d9e6f1}.atlas-card-copy>span{font-size:10px;line-height:1.65;color:#8297ae;max-width:220px}.atlas-card-copy>em{font-style:normal;font-size:8px;color:#bca6d8}.atlas-card>svg{position:absolute;right:12px;top:14px;color:#6a839b;width:12px}
+.atlas-empty{text-align:center;padding:30px 15px;color:#8ba4bc;font-size:12px}.atlas-empty button{margin-top:7px;color:#d3e8fa;text-decoration:underline}
+@media(max-width:1100px){.deep-destination{min-width:215px}.atlas-card>.cosmic-art{width:47px}}
+@media(max-width:760px){.deep-destination{flex:0 0 184px;min-width:184px}.deep-browse{font-size:9px;gap:6px}.deep-browse>svg:last-child{display:none}.deep-count{min-width:19px;height:17px;font-size:8px}.deep-dock-top{gap:7px}.deep-playback{gap:9px}.deep-label-toggle{font-size:7px}.deep-dock-bottom>div{gap:8px}.deep-dock-bottom>div>span{font-size:7px}.destination-solar-frontiers h1{font-size:36px}.atlas-grid{grid-template-columns:1fr}.atlas-card{min-height:109px}.atlas-card>.cosmic-art{width:59px}.atlas-card-copy>span{max-width:none}.atlas-filters button{font-size:9px;padding:7px 9px}.atlas-search input{font-size:12px}.cosmic-world-label{font-size:7px}.cosmic-region-label,.cosmic-direction{font-size:6px;letter-spacing:.6px}}
+@media(prefers-reduced-motion:reduce){.deep-destinations{scroll-behavior:auto}.atlas-card{transition:none}}
