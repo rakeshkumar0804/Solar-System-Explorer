@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Palette, ChevronDown, CircleDot, Tag, Sparkles, Play } from 'lucide-react';
+import { Palette, ChevronDown, CircleDot, Tag, Sparkles } from 'lucide-react';
 import { THEMES, THEME_KEYS } from '../../data/themes';
 import type { ExplorerSettings, ThemeConfig, CosmicToggles } from '../../types/space';
 import { SpaceObjectsMenu } from './SpaceObjectsMenu';
@@ -10,7 +10,6 @@ interface ControlPanelProps {
   isVisible?: boolean;
   onUpdateSettings: (updater: (prev: ExplorerSettings) => ExplorerSettings) => void;
   onResetCamera?: () => void;
-  onReplayIntro?: () => void;
 }
 
 export function ControlPanel({
@@ -18,7 +17,6 @@ export function ControlPanel({
   theme,
   isVisible = true,
   onUpdateSettings,
-  onReplayIntro,
 }: ControlPanelProps) {
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const [isSpaceObjectsOpen, setIsSpaceObjectsOpen] = useState(false);
@@ -211,47 +209,34 @@ export function ControlPanel({
           </button>
         </div>
 
-        {/* 4. SPACE OBJECTS & REPLAY INTRO */}
-        <div className="grid grid-cols-[1fr_auto] gap-2 items-center">
-          <div className="relative flex-1" ref={spaceRef}>
-            <button
-              onClick={() => {
-                setIsSpaceObjectsOpen(!isSpaceObjectsOpen);
-                setIsThemeMenuOpen(false);
-              }}
-              aria-label="Toggle space phenomena and objects menu"
-              aria-expanded={isSpaceObjectsOpen}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gradient-to-r from-purple-900/40 via-purple-950/60 to-purple-900/40 hover:from-purple-800/50 hover:to-purple-800/50 border border-purple-700/30 text-purple-200 font-semibold transition-all cursor-pointer shadow-md text-xs focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
-            >
-              <div className="flex items-center gap-1.5 truncate">
-                <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" aria-hidden="true" />
-                <span className="truncate">Space Objects</span>
-              </div>
-              <ChevronDown className={`w-3.5 h-3.5 text-purple-300 transition-transform shrink-0 ${isSpaceObjectsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
-            </button>
+        {/* 4. SPACE OBJECTS */}
+        <div className="relative w-full" ref={spaceRef}>
+          <button
+            onClick={() => {
+              setIsSpaceObjectsOpen(!isSpaceObjectsOpen);
+              setIsThemeMenuOpen(false);
+            }}
+            aria-label="Toggle space phenomena and objects menu"
+            aria-expanded={isSpaceObjectsOpen}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gradient-to-r from-purple-900/40 via-purple-950/60 to-purple-900/40 hover:from-purple-800/50 hover:to-purple-800/50 border border-purple-700/30 text-purple-200 font-semibold transition-all cursor-pointer shadow-md text-xs focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
+          >
+            <div className="flex items-center gap-1.5 truncate">
+              <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" aria-hidden="true" />
+              <span className="truncate">Space Objects</span>
+            </div>
+            <ChevronDown className={`w-3.5 h-3.5 text-purple-300 transition-transform shrink-0 ${isSpaceObjectsOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+          </button>
 
-            {isSpaceObjectsOpen && (
-              <div className="absolute bottom-full left-0 mb-2.5 z-50">
-                <SpaceObjectsMenu
-                  toggles={settings.cosmicToggles}
-                  theme={theme}
-                  onToggle={handleTogglePhenomenon}
-                  onToggleAll={handleToggleAllPhenomena}
-                  onClose={() => setIsSpaceObjectsOpen(false)}
-                />
-              </div>
-            )}
-          </div>
-
-          {onReplayIntro && (
-            <button
-              onClick={onReplayIntro}
-              title="Replay Navigation System Startup"
-              aria-label="Replay Navigation System Startup"
-              className="p-2 rounded-xl bg-purple-950/50 hover:bg-purple-900/70 border border-purple-800/40 hover:border-purple-500/60 text-purple-300 hover:text-white transition-all cursor-pointer shadow-md text-xs flex items-center justify-center focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
-            >
-              <Play className="w-3.5 h-3.5 text-purple-300 fill-purple-300" aria-hidden="true" />
-            </button>
+          {isSpaceObjectsOpen && (
+            <div className="absolute bottom-full left-0 mb-2.5 z-50">
+              <SpaceObjectsMenu
+                toggles={settings.cosmicToggles}
+                theme={theme}
+                onToggle={handleTogglePhenomenon}
+                onToggleAll={handleToggleAllPhenomena}
+                onClose={() => setIsSpaceObjectsOpen(false)}
+              />
+            </div>
           )}
         </div>
       </div>

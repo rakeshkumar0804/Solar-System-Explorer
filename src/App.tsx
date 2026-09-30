@@ -5,7 +5,6 @@ import { ControlPanel } from './components/ui/ControlPanel';
 import { InfoPanel } from './components/ui/InfoPanel';
 import { ControlsOverlay } from './components/ui/ControlsOverlay';
 import { CompareModal } from './components/ui/CompareModal';
-import { BootScreen } from './components/boot/BootScreen';
 import { SUN_DATA, PLANETS_DATA, ALL_CELESTIAL_BODIES } from './data/planetsData';
 import { DEEP_SPACE_OBJECTS } from './data/spaceObjectsData';
 import { THEMES, THEME_KEYS } from './data/themes';
@@ -54,24 +53,12 @@ function App() {
   // Shared WebGL Verification State
   const [webglStatus, setWebglStatus] = useState<WebGLStatus>(() => {
     if (typeof window === 'undefined') return 'checking';
-    return isWebGLSupported() ? 'checking' : 'unsupported';
+    return isWebGLSupported() ? 'supported' : 'unsupported';
   });
   const [webglError, setWebglError] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
     return isWebGLSupported() ? null : 'WebGL is disabled or unsupported by your graphics driver';
   });
-
-  // Cinematic Boot Screen States
-  const [showBoot, setShowBoot] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    try {
-      return !sessionStorage.getItem('hasSeenCosmicBoot');
-    } catch {
-      return true;
-    }
-  });
-  const [isReplayBoot, setIsReplayBoot] = useState<boolean>(false);
-  const [isSceneReady, setIsSceneReady] = useState<boolean>(false);
 
   // Automated Cosmic Tour State
   const [isTourActive, setIsTourActive] = useState(false);
@@ -127,17 +114,11 @@ function App() {
     spaceAudio.playSelectSound();
   }, []);
 
-  const handleReplayIntro = useCallback(() => {
-    setIsReplayBoot(true);
-    setShowBoot(true);
-  }, []);
-
   const handleRetryWebGL = useCallback(() => {
     const supported = isWebGLSupported();
     if (supported) {
-      setWebglStatus('checking');
+      setWebglStatus('supported');
       setWebglError(null);
-      setIsSceneReady(false);
     } else {
       setWebglStatus('unsupported');
       setWebglError('WebGL is disabled or unsupported by your graphics driver');
@@ -259,21 +240,8 @@ function App() {
 
   return (
     <main className="w-screen h-screen relative overflow-hidden bg-[#05010d] text-slate-100 select-none">
-      {/* 1. Cinematic Boot Screen (Active during initial launch / replay) */}
-      {showBoot && (
-        <BootScreen
-          webglStatus={webglStatus}
-          isSceneReady={isSceneReady}
-          isReplay={isReplayBoot}
-          onComplete={() => {
-            setShowBoot(false);
-            setIsReplayBoot(false);
-          }}
-        />
-      )}
-
-      {/* 2. Primary 3D WebGL Canvas Scene / Fallback (inert when boot is active) */}
-      <div className="w-full h-full absolute inset-0" aria-hidden={showBoot}>
+      {/* 1. Primary 3D WebGL Canvas Scene / Fallback */}
+      <div className="w-full h-full absolute inset-0">
         <Scene
           sunData={SUN_DATA}
           planets={PLANETS_DATA}
@@ -288,20 +256,15 @@ function App() {
           webglStatus={webglStatus}
           webglError={webglError}
           onSelect={handleSelectObject}
-          onSceneReady={() => {
-            setWebglStatus('supported');
-            setIsSceneReady(true);
-          }}
           onWebGLFailure={(reason) => {
             setWebglStatus('unsupported');
             setWebglError(reason);
-            setIsSceneReady(false);
           }}
           onRetryWebGL={handleRetryWebGL}
         />
       </div>
 
-      {/* 3. Top Navigation & Control Suite */}
+      {/* 2. Top Navigation & Control Suite */}
       <Navbar
         planets={ALL_CELESTIAL_BODIES}
         deepSpaceObjects={DEEP_SPACE_OBJECTS}
@@ -315,17 +278,15 @@ function App() {
         onOpenCompare={() => setIsCompareOpen(true)}
       />
 
-      {/* 4. Persistent Floating Control Dock (Bottom Left) */}
+      {/* 3. Persistent Floating Control Dock (Bottom Left) */}
       <ControlPanel
         settings={settings}
         theme={activeTheme}
-        isVisible={!showBoot}
         onUpdateSettings={setSettings}
         onResetCamera={handleResetOverview}
-        onReplayIntro={handleReplayIntro}
       />
 
-      {/* 5. Telemetry & Info Drawer */}
+      {/* 4. Telemetry & Info Drawer */}
       <InfoPanel
         selectedItem={selectedItem}
         theme={activeTheme}
@@ -334,7 +295,7 @@ function App() {
         onNextPlanet={handleNextPlanet}
       />
 
-      {/* 6. Dedicated Glassmorphic Dual Comparison Modal */}
+      {/* 5. Dedicated Glassmorphic Dual Comparison Modal */}
       {isCompareOpen && (
         <CompareModal
           initialTargetA={compareA}
@@ -344,10 +305,9 @@ function App() {
         />
       )}
 
-      {/* 7. Persistent Navigation Guide & Legend (Bottom Right) */}
+      {/* 6. Persistent Navigation Guide & Legend (Bottom Right) */}
       <ControlsOverlay
         theme={activeTheme}
-        isVisible={!showBoot}
       />
     </main>
   );
